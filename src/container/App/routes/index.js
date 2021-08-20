@@ -10,13 +10,7 @@ import {
 const RouteApp = ({ match }) => {
   return (
     <Switch>
-    
-      <Route path={`/users`} component={asyncComponent(() => import("../../../screens/User/user"))} />
-    
-
-      {/* <Route path={`/category`} component={asyncComponent(() => import("../../../screens/Services/Category/Category"))} />
-      <Route path={`/services`} component={asyncComponent(() => import("../../../screens/Services/Category/subCategory/Services"))} /> */}
-      
+      <Route path={`/users`} component={asyncComponent(() => import("../../../screens/User/user"))} />      
     </Switch>
 
   )
