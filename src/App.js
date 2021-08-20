@@ -1,9 +1,10 @@
-import {Button}  from 'antd'
+
+import Login from './screens/Login/login'
 
 function App() {
   return (
     <div >
-      <Button type="primary">Primary Button</Button>
+     <Login />
     </div>
   );
 }
