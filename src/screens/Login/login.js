@@ -12,7 +12,7 @@ function Login() {
     document.cookie = `token=123`;
     document.cookie = `name=Umair Khatri`;
     document.cookie = `role=admin`;
-    history.push("/user");
+    history.push("/users");
     window.location.reload();
   };
   const onFinishFailed = (errorInfo) => {

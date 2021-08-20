@@ -13,7 +13,7 @@ const MainApp = (props) => {
 
   const match = useRouteMatch();
   useEffect(() => {
-    document.title = "Dashboard | Service App";
+    document.title = "Dashboard | Make Gravity Jewellery";
   }, []);
 
 

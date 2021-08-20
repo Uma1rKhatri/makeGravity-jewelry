@@ -42,15 +42,14 @@ const AppSidebar = ({ props, test }) => {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[0]}
+          selectedKeys={["1"]}
         >
 
           <div className="logo"><MenuOutlined onClick={handleClick} /></div>
     
          
           <Menu.Item
-            style={{ paddingRight: "50px" }}
-            key="jobs"
+            key="1"
             icon={<UserOutlined />}
           >
             <Link to={`/users`}>

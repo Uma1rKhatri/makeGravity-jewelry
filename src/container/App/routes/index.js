@@ -11,7 +11,7 @@ const RouteApp = ({ match }) => {
   return (
     <Switch>
     
-      <Route path={`/user`} component={asyncComponent(() => import("../../../screens/User/user"))} />
+      <Route path={`/users`} component={asyncComponent(() => import("../../../screens/User/user"))} />
     
 
       {/* <Route path={`/category`} component={asyncComponent(() => import("../../../screens/Services/Category/Category"))} />

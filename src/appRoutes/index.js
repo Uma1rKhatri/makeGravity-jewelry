@@ -50,7 +50,7 @@ class Routers extends React.Component {
                 path="/signin"
                 render={() => {
                   if (token && name && role) {
-                    return <Redirect to="/user" />;
+                    return <Redirect to="/users" />;
                   } else {
                     return (
                       <Route exact path="/signin" component={Login} />
