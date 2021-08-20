@@ -1,0 +1,25 @@
+.sidebar-height aside{
+    max-width: 100% !important; 
+    min-width: 100% !important;
+    /* // width: 100% !important; */
+}
+
+
+
+.logo {
+    font-size: 20px;
+    margin: 16px;
+    padding: 10px;
+    display: flex;
+    /* justify-content: space-around; */
+  }
+
+  .ant-menu.ant-menu-dark.ant-menu-inline-collapsed{
+    height: 100vh !important;
+    background-color: rgb(114, 120, 204) !important;
+  }
+
+  .ant-menu.ant-menu-dark.ant-menu-root.ant-menu-inline{
+    height: 100vh !important;
+    background-color: rgb(114, 120, 204) !important;
+  }

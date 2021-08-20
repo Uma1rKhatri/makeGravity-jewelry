@@ -2,10 +2,19 @@ import React, { useEffect } from "react";
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import "./login.css";
+import { useHistory } from "react-router-dom";
 
 function Login() {
   const [form] = Form.useForm();
-  const handleSubmit = (values) => {};
+  let history = useHistory();
+  const handleSubmit = (values) => {
+    console.log("values",values)
+    document.cookie = `token=123`;
+    document.cookie = `name=Umair Khatri`;
+    document.cookie = `role=admin`;
+    history.push("/user");
+    window.location.reload();
+  };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
