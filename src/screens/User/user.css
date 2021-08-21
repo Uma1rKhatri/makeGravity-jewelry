@@ -134,3 +134,9 @@
     border-radius: 5px 5px 0 0 !important;
     border-bottom: 2px solid #f0f0f0 !important;
   }
+
+  @media screen and (max-width: 768px) {
+    .gr-mb-2 {
+        margin-bottom: 10px !important
+    }
+}
