@@ -1,14 +1,15 @@
-
-import Login from './screens/Login/login'
-import HeaderComponent from './component/Header';
-import AppSidebar from './component/SideBar';
 import Routers from "./appRoutes";
-
+import { Provider } from "react-redux";
+import { store, persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 function App() {
   return (
-    <div >
-    <Routers />
-    </div>
+    <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+
+      <Routers />
+    </PersistGate>
+  </Provider>
   );
 }
 

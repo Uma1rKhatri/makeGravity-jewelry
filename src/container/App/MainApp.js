@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect } from "react";
 import HeaderComponent from "../../component/Header";
 import AppSidebar from "../../component/SideBar";
 import { useRouteMatch } from "react-router-dom";
@@ -9,7 +9,7 @@ import "./mainApp.css";
 import { Layout } from 'antd';
 
 const MainApp = (props) => {
-  const { Header, Footer, Sider, Content } = Layout;
+
 
   const match = useRouteMatch();
   useEffect(() => {
@@ -17,11 +17,6 @@ const MainApp = (props) => {
   }, []);
 
 
-
-  const handleToggle = (val) => {
-    console.log("val", val);
-    var test = val;
-  }
   return (
     <>
       <Layout className="body">

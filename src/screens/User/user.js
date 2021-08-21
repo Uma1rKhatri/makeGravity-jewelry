@@ -147,7 +147,7 @@ const User = () => {
                     <Button   onClick={() => openModal()} style={{ background: "rgb(114, 120, 204)", color: '#fff' }} >ADD</Button>
 
                     <div className="user-table">
-                        <Table dataSource={dataSource} columns={columns} bordered
+                        <Table dataSource={dataSource} columns={columns}
                             scroll={{ x: "calc(100 + 50%)" }}
                             style={{ paddingLeft: 20, paddingRight: 20 }}
                             bordered={true}
