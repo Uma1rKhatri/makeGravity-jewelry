@@ -1,31 +1,43 @@
-import React, { useEffect } from "react";
-import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Checkbox, Row, Col, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import "./login.css";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { userLogin } from "../../redux/actions/auth-action"
 import { USER_LOGIN_SUCCESS, USER_LOGIN_ERROR } from "../../constant/redux-type";
-
+import Loader from "react-loader-spinner"
 function Login() {
   const [form] = Form.useForm();
 
   const dispatch = useDispatch()
   let history = useHistory();
-
+  const dataState = useSelector((state) => state)
+  const [disable, setDisable] = useState(false)
 
   const handleSubmit = (values) => {
-    document.cookie = `token=123`;
-    document.cookie = `name=Umair Khatri`;
-    document.cookie = `role=admin`;
-    history.push("/users");
-    window.location.reload();
+    setDisable(true)
     dispatch(userLogin(values)).then((result) => {
+    
       if (result.type === USER_LOGIN_SUCCESS) {
-        console.log("values", values)
-      
+
+        let data = result?.response?.data;
+        if (data !== undefined) {
+          console.log("result", data?.data)
+          document.cookie = `token=${data?.token?.access}`;
+          document.cookie = `name=${data?.data?.first_name + " " + data?.data?.last_name}`;
+          document.cookie = `role=${data?.data?.role}`;
+          setDisable(false)
+          history.push("/users");
+          window.location.reload();
+        }
+
+
       } else if (result.type === USER_LOGIN_ERROR) {
-        console.log("err")
+        message.error(`${result?.response?.data}`, 3, onclose).then(() => {
+          setDisable(false)
+        })
+
       }
     })
 
@@ -106,11 +118,15 @@ function Login() {
                 type="primary"
                 htmlType="submit"
                 className="login-form-button"
+                disabled={disable}
               >
                 Log in
               </Button>
             </Form.Item>
           </Form>
+          <div className={dataState?.login && dataState?.login?.loading === true ? "loader-bg" : "hide"}>
+            <Loader type="Rings" color="rgba(44, 62, 80,1.0)" height={140} width={140} className="loader" />
+          </div>
         </div>
       </Col>
     </Row>

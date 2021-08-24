@@ -8,10 +8,10 @@ export const userLogin = data => dispatch => {
 
   return axios({
     method: "POST",
-    url: `${baseURL}users/login`,
+    url: `${baseURL}auth/`,
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
+     Accept: "application/json",
+     "Content-Type": "application/json",
     },
     data: data
   })
@@ -19,6 +19,7 @@ export const userLogin = data => dispatch => {
       return dispatch({ type: USER_LOGIN_SUCCESS, response: response });
     })
     .catch(error => {
+      console.log("error",error)
       if (error.message === "Network Error") {
         return dispatch({ type: USER_LOGIN_ERROR, response: error.message });
       }

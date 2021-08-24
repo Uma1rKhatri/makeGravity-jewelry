@@ -1,35 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout, Row, Col, Input } from 'antd'
 import './user.css'
 import TableComponent from './Table';
 import UserAddComponent from './AddUser'
 import SearchBox from '../../component/SearchBox'
+import { useDispatch , useSelector} from 'react-redux'
+import { userGet } from '../../redux/actions/user-action'
+import {USER_GET_SUCCESS, USER_GET_ERROR} from '../../constant/redux-type';
 
 const User = () => {
-    const [dataSource, setDataSource] = useState([{
-        key: 0,
-        firstName: 'Mike',
-        lastName: 'Haul',
-        email: 'mike54@yahoo.com',
-        role: 0,
-        isActive: 1
-    },
-    {
-        key: 1,
-        firstName: 'John',
-        lastName: 'Dav',
-        email: "john65@hotmail.com",
-        role: 0,
-        isActive: 0
-    },
-    {
-        key: 2,
-        firstName: 'Sam',
-        lastName: 'micky',
-        email: "Sam22@gmail.com",
-        role: 1,
-        isActive: 1
-    }])
+    const dispatch = useDispatch();
+    const dataState = useSelector((state) => state)
+    const [dataSource, setDataSource] = useState([])
     const { Content } = Layout;
 
     const handleSearch = (val) => {
@@ -41,7 +23,18 @@ const User = () => {
         data.key = dataSource.length
         setDataSource([...dataSource, data])
     }
-
+    console.log("dataState", dataState)
+    useEffect(() => {
+      
+        dispatch(userGet()).then((result) => {
+          if(result.type === USER_GET_SUCCESS){
+              console.log("result", result.response.data.data)
+              setDataSource(result.response.data.data)
+          }else if(result.type === USER_GET_ERROR){
+            setDataSource([])
+          }
+        })
+    }, [])
     return (
         <React.Fragment>
             <Layout
@@ -58,7 +51,9 @@ const User = () => {
                             <SearchBox search={handleSearch} />
                         </Col>
                         <Col span={24}>
-                            <TableComponent dataSource={dataSource} />
+                            <TableComponent dataSource={dataSource} 
+                            loading={dataState?.userGet?.loading}
+                            />
                         </Col>
                     </Row>
                 </Content>

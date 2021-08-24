@@ -64,7 +64,7 @@ const UserAddComponent = ({user}) => {
                         <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
                                 label="First Name"
-                                name="firstName"
+                                name="first_name"
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
                                 rules={[{ required: true, message: "Please input First Name!" }]}
@@ -73,7 +73,7 @@ const UserAddComponent = ({user}) => {
                             </Form.Item>
                             <Form.Item
                                 label="Last Name"
-                                name="lastName"
+                                name="last_name"
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
                                 rules={[{ required: true, message: "Please input Last Name!" }]}

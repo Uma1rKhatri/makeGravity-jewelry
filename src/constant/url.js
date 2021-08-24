@@ -1,0 +1,1 @@
+export const baseURL =  "https://make-gravity-jwelery.herokuapp.com/api/"

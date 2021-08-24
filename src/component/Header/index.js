@@ -1,17 +1,15 @@
-import React, { useState } from "react";
-import { Layout, Menu, Dropdown, Row, Col } from "antd";
-
-// import { withRouter } from "react-router-dom";
-import Sidebar from "../SideBar";
+import React from "react";
+import {  Menu, Dropdown } from "antd";
+import { ReadCookie } from "../../utils/ReadCookie";
 import "./header.css";
 
-const { Header } = Layout;
 
-const menu = (props) => (
+
+const menu = () => (
   <Menu>
     <Menu.Item disabled>
       <a rel="noopener noreferrer" href="#/">
-        Umair
+      {ReadCookie("name")}
       </a>
     </Menu.Item>
     <Menu.Item>
