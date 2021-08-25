@@ -32,7 +32,7 @@ export const userAdd = (data, type) => dispatch => {
   dispatch({ type: USER_ADD_REQUEST });
 
   return axios({
-    method: "GET",
+    method: "POST",
     url: `${baseURL}${type}/`,
     headers: {
      Accept: "application/json",
@@ -41,6 +41,8 @@ export const userAdd = (data, type) => dispatch => {
     data: data
   })
     .then(response => {
+      console.log("response", response)
+      console.log("${baseURL}${type}/", `${baseURL}${type}/`)
       return dispatch({ type: USER_ADD_SUCCESS, response: response });
     })
     .catch(error => {
