@@ -31,7 +31,7 @@ const TableComponent = ({ dataSource, loading }) => {
             width: 200,
             render: (text, record) => (
                 <div>
-                    {record.role === 0 ? "user" : "admin"}
+                    {record.role === "user" ? "user" : "admin"}
                 </div>)
         },
         {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import './page404.css'
 
 const Error404 = () => (
     <div className="gx-page-error-container">

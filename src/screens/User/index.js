@@ -5,15 +5,15 @@ import TableComponent from './Table';
 import UserAddComponent from './AddUser'
 import SearchBox from '../../component/SearchBox'
 import { useDispatch, useSelector } from 'react-redux'
-import { userGet ,userAdd} from '../../redux/actions/user-action'
+import { userGet, userAdd } from '../../redux/actions/user-action'
 import { USER_GET_SUCCESS, USER_GET_ERROR, USER_ADD_SUCCESS, USER_ADD_ERROR } from '../../constant/redux-type';
 import { ReadCookie } from '../../utils/ReadCookie';
-import Error404 from "../../component/Page404"
+import Error404 from "../../component/Page404";
 const User = () => {
     const dispatch = useDispatch();
     const dataState = useSelector((state) => state)
     const [dataSource, setDataSource] = useState([])
-    const [match, setMatch] = useState(false)
+    const [match, setMatch] = useState("")
     const { Content } = Layout;
     const role = ReadCookie("role")
     const handleSearch = (val) => {
@@ -24,7 +24,7 @@ const User = () => {
         console.log("data...", data)
         let type = data.role === 1 ? "admin" : "user"
         console.log("type", type)
-        dispatch(userAdd(data, type)).then((result)=>{
+        dispatch(userAdd(data, type)).then((result) => {
             if (result.type === USER_ADD_SUCCESS) {
                 console.log("result", result.response)
                 fetchUser()
@@ -48,38 +48,39 @@ const User = () => {
     }
     useEffect(() => {
         if (role === "admin") {
-      //      setLoading(false)
-            setMatch(true)
-          }
+            setMatch("admin")
+        } else {
+            setMatch("user")
+        }
         fetchUser()
 
     }, [])
     return (
         <React.Fragment>
-           { match ?
-            <Layout
-                style={{ height: "100vh", overflowY: "hidden", background: "white" }}
-            >
+            {match === "admin" ?
+                <Layout
+                    style={{ height: "100vh", overflowY: "hidden", background: "white" }}
+                >
 
-                <Content style={{ margin: "20px" }}>
-                    <Row justify="space-around">
-                        <Col xs={24} sm={12} md={12} className="gr-mb-2">
-                            <UserAddComponent user={handleSubmit} />
-                        </Col>
+                    <Content style={{ margin: "20px" }}>
+                        <Row justify="space-around">
+                            <Col xs={24} sm={12} md={12} className="gr-mb-2">
+                                <UserAddComponent user={handleSubmit} />
+                            </Col>
 
-                        <Col xs={24} sm={12} md={6} className="gr-mb-2">
-                            <SearchBox search={handleSearch} />
-                        </Col>
-                        <Col span={24}>
-                            <TableComponent dataSource={dataSource}
-                                loading={dataState?.userGet?.loading}
-                            />
-                        </Col>
-                    </Row>
-                </Content>
-            </Layout>
+                            <Col xs={24} sm={12} md={6} className="gr-mb-2">
+                                <SearchBox search={handleSearch} />
+                            </Col>
+                            <Col span={24}>
+                                <TableComponent dataSource={dataSource}
+                                    loading={dataState?.userGet?.loading}
+                                />
+                            </Col>
+                        </Row>
+                    </Content>
+                </Layout>
 
-:<Error404 />}
+                : match === "user" ? <Error404 /> : null}
         </React.Fragment>
     )
 }
