@@ -36,10 +36,10 @@ export default function asyncComponent(importComponent) {
     render() {
       const Component = this.state.component || (
         <Loader
-          type="ThreeDots"
+          type="Rings"
           color="rgba(44, 62, 80,0.8)"
-          height={100}
-          width={100}
+          height={40}
+          width={40}
           className="loader"
           style={{
             display: "flex",

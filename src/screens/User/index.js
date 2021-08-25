@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Row, Col, Input } from 'antd'
+import { Layout, Row, Col, Input, message } from 'antd'
 import './user.css'
 import TableComponent from './Table';
 import UserAddComponent from './AddUser'
 import SearchBox from '../../component/SearchBox'
-import { useDispatch , useSelector} from 'react-redux'
-import { userGet } from '../../redux/actions/user-action'
-import {USER_GET_SUCCESS, USER_GET_ERROR} from '../../constant/redux-type';
+import { useDispatch, useSelector } from 'react-redux'
+import { userGet ,userAdd} from '../../redux/actions/user-action'
+import { USER_GET_SUCCESS, USER_GET_ERROR, USER_ADD_SUCCESS, USER_ADD_ERROR } from '../../constant/redux-type';
 
 const User = () => {
     const dispatch = useDispatch();
@@ -20,20 +20,33 @@ const User = () => {
 
     const handleSubmit = (data) => {
         console.log("data...", data)
+        let type = data.role === 1 ? "admin" : "user"
+        console.log("type", type)
+        dispatch(userAdd(data, type)).then((result)=>{
+            if (result.type === USER_ADD_SUCCESS) {
+                console.log("result", result.response)
+                fetchUser()
+                message.success(`record add successfully!`, 3, onclose)
+            } else if (result.type === USER_ADD_ERROR) {
+                message.error(`${result?.response?.data}`, 3, onclose)
+            }
+        })
         data.key = dataSource.length
         setDataSource([...dataSource, data])
     }
-    console.log("dataState", dataState)
-    useEffect(() => {
-      
+    const fetchUser = () => {
         dispatch(userGet()).then((result) => {
-          if(result.type === USER_GET_SUCCESS){
-              console.log("result", result.response.data.data)
-              setDataSource(result.response.data.data)
-          }else if(result.type === USER_GET_ERROR){
-            setDataSource([])
-          }
+            if (result.type === USER_GET_SUCCESS) {
+                console.log("result", result.response.data.data)
+                setDataSource(result.response.data.data)
+            } else if (result.type === USER_GET_ERROR) {
+                setDataSource([])
+            }
         })
+    }
+    useEffect(() => {
+        fetchUser()
+
     }, [])
     return (
         <React.Fragment>
@@ -51,8 +64,8 @@ const User = () => {
                             <SearchBox search={handleSearch} />
                         </Col>
                         <Col span={24}>
-                            <TableComponent dataSource={dataSource} 
-                            loading={dataState?.userGet?.loading}
+                            <TableComponent dataSource={dataSource}
+                                loading={dataState?.userGet?.loading}
                             />
                         </Col>
                     </Row>

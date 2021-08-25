@@ -74,11 +74,12 @@ const TableComponent = ({ dataSource, loading }) => {
         dataSource[data.key] = data
         setFlag(!flag)
     }
-    console.log("loading data", loading)
+ 
     return (
         <>
             <div className="user-table">
                 <Table dataSource={dataSource} columns={columns}
+                rowKey="id"
                     loading={loading ? { indicator: <Loader
                         type="Rings"
                         color="rgba(44, 62, 80,0.8)"
