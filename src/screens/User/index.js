@@ -7,13 +7,15 @@ import SearchBox from '../../component/SearchBox'
 import { useDispatch, useSelector } from 'react-redux'
 import { userGet ,userAdd} from '../../redux/actions/user-action'
 import { USER_GET_SUCCESS, USER_GET_ERROR, USER_ADD_SUCCESS, USER_ADD_ERROR } from '../../constant/redux-type';
-
+import { ReadCookie } from '../../utils/ReadCookie';
+import Error404 from "../../component/Page404"
 const User = () => {
     const dispatch = useDispatch();
     const dataState = useSelector((state) => state)
     const [dataSource, setDataSource] = useState([])
+    const [match, setMatch] = useState(false)
     const { Content } = Layout;
-
+    const role = ReadCookie("role")
     const handleSearch = (val) => {
         console.log("val...", val)
     }
@@ -45,11 +47,16 @@ const User = () => {
         })
     }
     useEffect(() => {
+        if (role === "admin") {
+      //      setLoading(false)
+            setMatch(true)
+          }
         fetchUser()
 
     }, [])
     return (
         <React.Fragment>
+           { match ?
             <Layout
                 style={{ height: "100vh", overflowY: "hidden", background: "white" }}
             >
@@ -72,7 +79,7 @@ const User = () => {
                 </Content>
             </Layout>
 
-
+:<Error404 />}
         </React.Fragment>
     )
 }

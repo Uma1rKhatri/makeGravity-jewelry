@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { Button } from 'antd';
 import "./sidebar.css";
+import { ReadCookie } from "../../utils/ReadCookie";
 import {
   UserOutlined,
   DashboardOutlined,
-  UsergroupAddOutlined,
+  DeploymentUnitOutlined,
   MenuOutlined
 } from "@ant-design/icons";
 import { Layout, Menu, Icon, Dropdown } from "antd";
@@ -17,21 +18,21 @@ const AppSidebar = ({ props, test }) => {
 
 
 
-//   const selectedKeys = props.location.pathname;
-//   const arrSplit = selectedKeys.split("/");
-//   let defaultOpenKeys;
-//   let openKey = '';
-//   if (arrSplit[2]) {
-//     defaultOpenKeys = arrSplit[2]
-//     openKey = arrSplit[1]
-//   } else {
-//     defaultOpenKeys = arrSplit[1]
- // }
+  const selectedKeys = props.location.pathname;
+  const arrSplit = selectedKeys.split("/");
+  let defaultOpenKeys;
+  let openKey = '';
+  if (arrSplit[2]) {
+    defaultOpenKeys = arrSplit[2]
+    openKey = arrSplit[1]
+  } else {
+    defaultOpenKeys = arrSplit[1]
+  }
   const [toggle, setToggle] = useState(true);
   const handleClick = () => {
     setToggle(!toggle);
   }
-
+let role =  ReadCookie("role");
   return (
     <div className="sidebar-height">
       <Sider
@@ -42,18 +43,27 @@ const AppSidebar = ({ props, test }) => {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={["1"]}
+          selectedKeys={[defaultOpenKeys]}
         >
 
           <div className="logo"><MenuOutlined onClick={handleClick} /></div>
-    
-         
+
+{role !== "user" &&
           <Menu.Item
-            key="1"
+            key="users"
             icon={<UserOutlined />}
           >
-            <Link to={`/users`}>
+            <Link to={`/users`} className="route-link" >
               <span>USERS</span>
+            </Link>
+          </Menu.Item>
+}
+          <Menu.Item
+            key="jewellery"
+            icon={<DeploymentUnitOutlined />}
+          >
+            <Link to={`/jewellery`} className="route-link">
+              <span>Jewellery</span>
             </Link>
           </Menu.Item>
         </Menu>
