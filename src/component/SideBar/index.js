@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, Icon, Dropdown } from "antd";
 const { Sider } = Layout;
-
+const SubMenu = Menu.SubMenu;
 
 
 const AppSidebar = ({ props, test }) => {
@@ -32,7 +32,7 @@ const AppSidebar = ({ props, test }) => {
   const handleClick = () => {
     setToggle(!toggle);
   }
-let role =  ReadCookie("role");
+  let role = ReadCookie("role");
   return (
     <div className="sidebar-height">
       <Sider
@@ -48,24 +48,37 @@ let role =  ReadCookie("role");
 
           <div className="logo"><MenuOutlined onClick={handleClick} /></div>
 
-{role !== "user" &&
-          <Menu.Item
-            key="users"
-            icon={<UserOutlined />}
-          >
-            <Link to={`/users`} className="route-link" >
-              <span>USERS</span>
-            </Link>
-          </Menu.Item>
-}
-          <Menu.Item
-            key="jewellery"
+          {role !== "user" &&
+            <Menu.Item
+              key="users"
+              icon={<UserOutlined />}
+            >
+              <Link to={`/users`} className="route-link" >
+                <span>USERS</span>
+              </Link>
+            </Menu.Item>
+          }
+          {/* <SubMenu
+                key="order"
+               // popupClassName={getNavStyleSubMenuClass(navStyle)}
+                title={
+                  <span>
+                    <i className="icon icon-product-grid" />
+                    <span>Auction Managment </span>
+                  </span>
+                }
+                
+              > */}
+              <Menu.Item
+            key="auction-management"
             icon={<DeploymentUnitOutlined />}
           >
-            <Link to={`/jewellery`} className="route-link">
-              <span>Jewellery</span>
+            <Link to={`/auction-management`} className="route-link">
+              <span>Auction Managment</span>
             </Link>
           </Menu.Item>
+              {/* </SubMenu> */}
+         
         </Menu>
       </Sider>
     </div>
