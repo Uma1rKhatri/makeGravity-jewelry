@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Row, Col, Input, message, Checkbox, Select } from 'antd'
+import { Layout, Row, Col, Input, message, Checkbox, Select, Button } from 'antd'
 import './list.css'
 import TableComponent from './Table';
 // import UserAddComponent from './AddUser'
-import SearchBox from '../../../component/SearchBox'
+import SearchBox from '../../component/SearchBox'
+import AuctionAddComponent from './AddAuction'
 // import { useDispatch, useSelector } from 'react-redux'
 // import { userGet, userAdd } from '../../redux/actions/user-action'
 // import { USER_GET_SUCCESS, USER_GET_ERROR, USER_ADD_SUCCESS, USER_ADD_ERROR } from '../../constant/redux-type';
@@ -98,12 +99,12 @@ const AuctionList = () => {
 
                         </Col>
 
-                        <Col xs={24} sm={12} md={6} className="gr-mb-2">
-                            <SearchBox search={handleSearch} />
+                        <Col xs={24} sm={12} md={16} className="gr-mb-2">
+                          <AuctionAddComponent/>
 
                         </Col>
-                        <Col xs={24} sm={12} md={16} className="gr-mb-2">
-
+                        <Col xs={24} sm={12} md={6} className="gr-mb-2">
+                        <SearchBox search={handleSearch} />
 
                         </Col>
 
