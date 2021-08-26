@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner';
 import moment from 'moment';
 const TableComponent = ({ dataSource, loading }) => {
     const [flag, setFlag] = useState(false)
-   
+
     const columns = [
         {
             title: 'Auction Image',

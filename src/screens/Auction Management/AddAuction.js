@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input, Form, Radio, Modal, Button, Row, Col, Select, Checkbox, DatePicker } from 'antd'
 
 
-const AuctionAddComponent = ({ user }) => {
+const AuctionAddComponent = ({ auction }) => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [check, setCheck] = useState(false)
@@ -27,16 +27,21 @@ const AuctionAddComponent = ({ user }) => {
         form.validateFields().then((values) => {
             console.log("values", values)
             const rangeValue = values['dataPicker'];
-            console.log("start", rangeValue[0]._d.toISOString())
-            console.log("end", rangeValue[1]._d.toISOString())
-            let uri = values.auction_url.substring(0, values.auction_url.lastIndexOf('.'))
-            console.log( "url", values.prefix + uri.replace(/(^\w+:|^)\/\//, '')+ values.suffix)
-            // let data = {};
-            // data = values;
-            // data.isActive = 1;
-            // user(data)
-            // setIsModalVisible(false)
-            // form.resetFields();
+            // console.log("start", rangeValue[0]._d.toISOString())
+            // console.log("end", rangeValue[1]._d.toISOString())
+            // let uri = values.auction_url.substring(0, values.auction_url.lastIndexOf('.'))
+            // console.log( "1", uri )
+            let data = {};
+           
+            data = values;
+           // data.auction_url = values.prefix + uri + values.suffix;
+            data.start_date = rangeValue[0]._d.toISOString();
+            data.end_date = rangeValue[1]._d.toISOString();
+           
+
+            auction(data)
+            setIsModalVisible(false)
+            form.resetFields();
 
         });
 
@@ -45,25 +50,25 @@ const AuctionAddComponent = ({ user }) => {
         form.resetFields();
     }
 
-    const { Option } = Select;
+    //const { Option } = Select;
 
-    const selectBefore = (
-        <Form.Item name="prefix" noStyle initialValue={"https://"} >
-            <Select defaultValue="https://">
-                <Option value="https://">https://</Option>
-                <Option value="http://">http://</Option>
-            </Select>
-        </Form.Item>
-    );
-    const selectAfter = (
-        <Form.Item name="suffix" noStyle initialValue={".com"} >
-            <Select defaultValue=".com" >
+    // const selectBefore = (
+    //     <Form.Item name="prefix" noStyle initialValue={"https://"} >
+    //         <Select defaultValue="https://">
+    //             <Option value="https://">https://</Option>
+    //             <Option value="http://">http://</Option>
+    //         </Select>
+    //     </Form.Item>
+    // );
+    // const selectAfter = (
+    //     <Form.Item name="suffix" noStyle initialValue={".com"} >
+    //         <Select defaultValue=".com" >
 
-                <Option value=".com">.com</Option>
-                <Option value=".org">.org</Option>
-            </Select>
-        </Form.Item>
-    );
+    //             <Option value=".com">.com</Option>
+    //             <Option value=".org">.org</Option>
+    //         </Select>
+    //     </Form.Item>
+    // );
 
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`);
@@ -74,13 +79,13 @@ const AuctionAddComponent = ({ user }) => {
     }
     const rangeConfig = {
         rules: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select date!',
-          },
+            {
+                type: 'array',
+                required: true,
+                message: 'Please select date!',
+            },
         ],
-      };
+    };
 
     return (
         <React.Fragment>
@@ -134,9 +139,14 @@ const AuctionAddComponent = ({ user }) => {
 
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
-                                rules={[{ required: true, message: "Please input auction URL!" }]}
+                                rules={[{ required: true, message: "Please input auction URL!" }, {
+                                    pattern: new RegExp(
+                                        /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+                    ),
+                    message: "Invalid URL string!",
+                                }]}
                             >
-                                <Input addonBefore={selectBefore} addonAfter={selectAfter} placeholder="mysite" className="inp" />
+                                <Input  placeholder="mysite" className="inp" />
                             </Form.Item>
                             <Form.Item
                                 label="Category"
@@ -155,7 +165,7 @@ const AuctionAddComponent = ({ user }) => {
 
                                 {...rangeConfig}
                             >
-                                <RangePicker  className="gx-w-100"  />
+                                <RangePicker className="gx-w-100" />
                             </Form.Item>
 
                             <Form.Item

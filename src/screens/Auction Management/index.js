@@ -2,49 +2,26 @@ import React, { useState, useEffect } from 'react'
 import { Layout, Row, Col, Input, message, Checkbox, Select, Button } from 'antd'
 import './list.css'
 import TableComponent from './Table';
-// import UserAddComponent from './AddUser'
 import SearchBox from '../../component/SearchBox'
 import AuctionAddComponent from './AddAuction'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { userGet, userAdd } from '../../redux/actions/user-action'
-// import { USER_GET_SUCCESS, USER_GET_ERROR, USER_ADD_SUCCESS, USER_ADD_ERROR } from '../../constant/redux-type';
-// import { ReadCookie } from '../../utils/ReadCookie';
+import { useDispatch, useSelector } from 'react-redux'
+import { auctionAdd, auctionGet } from '../../redux/actions/auction-action'
+ import {AUCTION_ADD_SUCCESS, AUCTION_ADD_ERROR, AUCTION_GET_SUCCESS, AUCTION_GET_ERROR } from '../../constant/redux-type';
+
 
 const AuctionList = () => {
-    // const dispatch = useDispatch();
-    // const dataState = useSelector((state) => state)
+    const dispatch = useDispatch();
+    const dataState = useSelector((state) => state)
     const [dataSource, setDataSource] = useState([
-        {
-            "id": 1,
-            "auction_name": "Test",
-            "sales": "$14",
-            "item": 13,
-            "start_date": "1/7/2021",
-            "end_date": "7/7/2021",
-            "auction_url": "https://www.youtube.com/watch?v=vCWjK_z5tuM",
-            "source": "https://res.cloudinary.com/asadaziz/image/upload/v1561444483/dummyavatar_kb3aub.png"
-
-        },
-        {
-            "id": 2,
-            "auction_name": "Test2",
-            "sales": "$954",
-            "item": 45,
-            "start_date": "4/8/2021",
-            "end_date": "7/8/2021",
-            "auction_url": "https://www.youtube.com/watch?v=vCWjK_z5tuM",
-            "source": "https://res.cloudinary.com/asadaziz/image/upload/v1561444483/dummyavatar_kb3aub.png"
-
-        }
+       
     ])
-    // const [match, setMatch] = useState("")
     const { Content } = Layout;
     const { Option } = Select;
 
     function handleChange(value) {
         console.log(`selected ${value}`);
     }
-    // const role = ReadCookie("role")
+
     const handleSearch = (val) => {
         console.log("val...", val)
     }
@@ -54,28 +31,39 @@ const AuctionList = () => {
     }
 
 
-    // const handleSubmit = (data) => {
-    //     console.log("data...", data)
-    //     let type = data.role === 1 ? "admin" : "user"
+    const handleSubmit = (data) => {
+        console.log("data...", data)
+  
     //     console.log("type", type)
-    //     dispatch(userAdd(data, type)).then((result) => {
-    //         if (result.type === USER_ADD_SUCCESS) {
-    //             console.log("result", result.response)
-    //             fetchUser()
-    //             message.success(`record add successfully!`, 3, onclose)
-    //         } else if (result.type === USER_ADD_ERROR) {
-    //             message.error(`${result?.response?.data}`, 3, onclose)
-    //         }
-    //     })
+        dispatch(auctionAdd(data)).then((result) => {
+            if (result.type === AUCTION_ADD_SUCCESS) {
+                console.log("result", result.response)
+                fetchAuction()
+                message.success(`record add successfully!`, 3, onclose)
+            } else if (result.type === AUCTION_ADD_ERROR) {
+                message.error(`${result?.response?.data}`, 3, onclose)
+            }
+        })
     //     data.key = dataSource.length
     //     setDataSource([...dataSource, data])
-    // }
+     }
+    const fetchAuction = () => {
+        dispatch(auctionGet()).then((result) => {
+            if (result.type === AUCTION_GET_SUCCESS) {
+                console.log("result", result.response.data.data)
+                setDataSource(result.response.data.data)
+            } else if (result.type === AUCTION_GET_SUCCESS) {
+                setDataSource([])
+            }
+        })
+    }
+    useEffect(() => {
 
-    // useEffect(() => {
+        fetchAuction()
 
-    //   //  fetchUser()
+    }, [])
+   
 
-    // }, [])
     return (
         <React.Fragment>
 
@@ -100,7 +88,7 @@ const AuctionList = () => {
                         </Col>
 
                         <Col xs={24} sm={12} md={16} className="gr-mb-2">
-                          <AuctionAddComponent/>
+                          <AuctionAddComponent auction={handleSubmit} />
 
                         </Col>
                         <Col xs={24} sm={12} md={6} className="gr-mb-2">
@@ -110,7 +98,7 @@ const AuctionList = () => {
 
                         <Col span={24}>
                             <TableComponent dataSource={dataSource}
-                            //loading={dataState?.userGet?.loading}
+                            loading={dataState?.auctionGet?.loading}
                             />
                         </Col>
                     </Row>
