@@ -5,17 +5,17 @@ import TableComponent from './Table';
 import SearchBox from '../../component/SearchBox'
 import AuctionAddComponent from './AddAuction'
 import { useDispatch, useSelector } from 'react-redux'
-import { auctionAdd, auctionGet } from '../../redux/actions/auction-action'
- import {AUCTION_ADD_SUCCESS, AUCTION_ADD_ERROR, AUCTION_GET_SUCCESS, AUCTION_GET_ERROR } from '../../constant/redux-type';
+import { auctionAdd, auctionGet,auctionEdit } from '../../redux/actions/auction-action'
+import { AUCTION_ADD_SUCCESS, AUCTION_ADD_ERROR, AUCTION_GET_SUCCESS, AUCTION_GET_ERROR, AUCTION_EDIT_SUCCESS, AUCTION_EDIT_ERROR } from '../../constant/redux-type';
 
 
 const AuctionList = () => {
     const dispatch = useDispatch();
     const dataState = useSelector((state) => state)
-    const [edit, setEdit] =  useState(false)
+    const [edit, setEdit] = useState(false)
     const [editRecord, setEditRecord] = useState({})
     const [dataSource, setDataSource] = useState([
-       
+
     ])
     const { Content } = Layout;
     const { Option } = Select;
@@ -35,8 +35,8 @@ const AuctionList = () => {
 
     const handleSubmit = (data) => {
         console.log("data...", data)
-  
-    //     console.log("type", type)
+
+        //     console.log("type", type)
         dispatch(auctionAdd(data)).then((result) => {
             if (result.type === AUCTION_ADD_SUCCESS) {
                 console.log("result", result.response)
@@ -46,15 +46,15 @@ const AuctionList = () => {
                 message.error(`${result?.response?.data}`, 3, onclose)
             }
         })
-    //     data.key = dataSource.length
-    //     setDataSource([...dataSource, data])
-     }
+        //     data.key = dataSource.length
+        //     setDataSource([...dataSource, data])
+    }
     const fetchAuction = () => {
         dispatch(auctionGet()).then((result) => {
             if (result.type === AUCTION_GET_SUCCESS) {
                 console.log("result", result.response.data.data)
                 setDataSource(result.response.data.data)
-            } else if (result.type === AUCTION_GET_SUCCESS) {
+            } else if (result.type === AUCTION_GET_ERROR) {
                 setDataSource([])
             }
         })
@@ -65,7 +65,7 @@ const AuctionList = () => {
 
     }, [])
 
-    const handleClose = (val) =>{
+    const handleClose = (val) => {
         console.log("vla", val)
         setEdit(val)
     }
@@ -75,19 +75,31 @@ const AuctionList = () => {
         setEditRecord(data)
         setEdit(true)
     }
-   
+    const editHandler = (val) => {
+        console.log("val", val)
+        dispatch(auctionEdit(val)).then((result) => {
+            
+            if (result.type === AUCTION_EDIT_SUCCESS) {
+                console.log("result", result.response)
+                fetchAuction()
+                message.success(`record edit successfully!`, 3, onclose)
+            } else if (result.type === AUCTION_EDIT_ERROR) {
+                message.error(`${result?.response?.data}`, 3, onclose)
+            }
+        })
+    }
 
     return (
         <React.Fragment>
 
             <Layout
-                style={{  overflowY: "hidden", background: "white" }}
+                style={{ overflowY: "hidden", background: "white" }}
             >
 
                 <Content style={{ margin: "20px" }}>
                     <Row justify="space-around">
                         <Col xs={24} sm={12} md={18} className="gr-mb-2">
-                            <Select defaultValue="lucy" style={{ width: 160, marginBottom:20 }} onChange={handleChange}>
+                            <Select defaultValue="lucy" style={{ width: 160, marginBottom: 20 }} onChange={handleChange}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                                 <Option value="Yiminghe">yiminghe</Option>
@@ -101,18 +113,18 @@ const AuctionList = () => {
                         </Col>
 
                         <Col xs={24} sm={12} md={16} className="gr-mb-2">
-                          <AuctionAddComponent auction={handleSubmit} edit={edit} editClose={handleClose} record={editRecord} />
+                            <AuctionAddComponent auction={handleSubmit} auctionEdit={editHandler} edit={edit} editClose={handleClose} record={editRecord} />
 
                         </Col>
                         <Col xs={24} sm={12} md={6} className="gr-mb-2">
-                        <SearchBox search={handleSearch} />
+                            <SearchBox search={handleSearch} />
 
                         </Col>
 
                         <Col span={24}>
                             <TableComponent dataSource={dataSource}
-                            loading={dataState?.auctionGet?.loading}
-                            record={handleEdit}
+                                loading={dataState?.auctionGet?.loading}
+                                record={handleEdit}
                             />
                         </Col>
                     </Row>

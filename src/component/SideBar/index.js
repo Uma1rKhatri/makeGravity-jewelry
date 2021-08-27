@@ -54,7 +54,7 @@ const AppSidebar = ({ props, test }) => {
               icon={<UserOutlined />}
             >
               <Link to={`/users`} className="route-link" >
-                <span>USERS</span>
+                <span>Users</span>
               </Link>
             </Menu.Item>
           }

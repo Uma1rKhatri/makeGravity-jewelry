@@ -38,9 +38,9 @@ const UserAddComponent = ({ user }) => {
     }
     return (
         <React.Fragment>
-            <Button onClick={() => openModal()} style={{ background: "rgb(114, 120, 204)", color: '#fff' }} >ADD</Button>
+            <Button onClick={() => openModal()} style={{ background: "rgb(114, 120, 204)", color: '#fff' }} >Add</Button>
             <Modal
-                title="ADD USER"
+                title="Add User"
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -49,7 +49,7 @@ const UserAddComponent = ({ user }) => {
                         Reset
                     </Button>,
                     <Button key="submit" type="primary" onClick={() => handleSubmit()}>
-                        ADD
+                        Add
                     </Button>,
                 ]}
             >

@@ -3,7 +3,7 @@ import { Input, Form, Radio, Modal, Button, Row, Col, Select, Checkbox, DatePick
 import { InboxOutlined } from '@ant-design/icons'
 import moment from 'moment';
 
-const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
+const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [check, setCheck] = useState(false)
@@ -14,7 +14,9 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
     const { RangePicker } = DatePicker;
 
     const openModal = () => {
+        setCheck(false)
         setIsModalVisible(true);
+
     };
 
     const Dragger = Upload.Dragger;
@@ -72,20 +74,37 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
     };
 
     const handleOk = () => {
+        setCheck(false)
         setIsModalVisible(false);
         form.resetFields();
         setProgress(0);
         setFileObject({});
+
         editClose(false)
+        form.setFieldsValue({
+            hidden: false
+        })
+        // form.setFieldsValue({
+        //     notes_text: null,
+        //     hidden: null,
+        //     auction_details_text: null
+        // })
+        // setCheck(false)
 
     };
 
     const handleCancel = () => {
+        setCheck(false)
         setIsModalVisible(false);
         form.resetFields();
+
         editClose(false)
         setProgress(0);
         setFileObject({});
+        form.setFieldsValue({
+            hidden: false
+        })
+
     };
 
     const handleSubmit = () => {
@@ -95,15 +114,25 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
             let data = {};
 
             data = values;
-            // data.auction_url = values.prefix + uri + values.suffix;
+
             if (!edit) {
                 data.start_date = rangeValue[0]._d.toISOString();
                 data.end_date = rangeValue[1]._d.toISOString();
                 if (values.image !== undefined)
                     data.auction_image = values.image.file.originFileObj
+                setCheck(false)
+                auction(data)
+                console.log("data", data)
+            } else {
+                data.id = record.id
+                console.log("data", data)
+                setCheck(false)
+                auctionEdit(data)
             }
-            console.log("data", data)
-           auction(data)
+
+
+
+
             setIsModalVisible(false)
             form.resetFields();
             setProgress(0);
@@ -138,24 +167,25 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
     };
     useEffect(() => {
         setIsModalVisible(edit);
-        form.setFieldsValue({
-            // source: record.source,
-            // auction_name: record.auction_name,
-            // auction_url: record.auction_url,
-            // category: record.category,
-            //   dataPicker:[moment("2020-03-09"), moment("2020-03-27")]
+        if (edit) {
+            form.setFieldsValue({
+                notes_text: record.notes_text,
+                hidden: record.hidden,
+                auction_details_text: record.auction_details_text
+            })
+            setCheck(record.hidden)
+        }
 
-        })
-        console.log("record", record)
+
 
     }, [edit])
 
 
     return (
         <React.Fragment>
-            <Button onClick={() => openModal()} style={{ background: "rgb(114, 120, 204)", color: '#fff' }} >ADD</Button>
+            <Button onClick={() => openModal()} style={{ background: "rgb(114, 120, 204)", color: '#fff' }} >Add</Button>
             <Modal
-                title="ADD AUCTION"
+                title={!edit ? "Add Auction" : "Edit Auction"}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -164,7 +194,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
                         Reset
                     </Button>,
                     <Button key="submit" type="primary" onClick={() => handleSubmit()}>
-                        ADD
+                        {!edit ? "Add" : "Edit"}
                     </Button>,
                 ]}
             >
@@ -242,7 +272,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
                                 wrapperCol={{ span: 24 }}
                                 rules={[{ required: true, message: "Please input category!" }]}
                             >
-                                <Input.TextArea placeholder="Category" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
+                                <Input.TextArea placeholder="Auction Details" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                             </Form.Item>
                             {edit &&
                                 <Form.Item
@@ -250,7 +280,6 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
                                     name="notes_text"
                                     labelCol={{ span: 24 }}
                                     wrapperCol={{ span: 24 }}
-                                    rules={[{ required: true, message: "Please input notes!" }]}
                                 >
                                     <Input.TextArea placeholder="Notes" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                                 </Form.Item>
@@ -263,7 +292,11 @@ const AuctionAddComponent = ({ auction, edit, editClose, record }) => {
                                 wrapperCol={{ span: 24 }}
                                 initialValue={check}
                             >
-                                <Checkbox onChange={onChange}>Show Hidden</Checkbox>
+                                <Checkbox 
+                                checked={check}
+                                //value={check} 
+                               //defaultChecked={check} 
+                                onChange={onChange}>Show Hidden</Checkbox>
 
                             </Form.Item>
                             {!edit &&
