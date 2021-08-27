@@ -3,7 +3,7 @@ import { Table, Empty, Spin } from 'antd'
 import { EditOutlined, LinkOutlined } from '@ant-design/icons'
 import Loader from 'react-loader-spinner';
 import moment from 'moment';
-const TableComponent = ({ dataSource, loading }) => {
+const TableComponent = ({ dataSource, loading, record }) => {
     const [flag, setFlag] = useState(false)
 
     const columns = [
@@ -14,7 +14,7 @@ const TableComponent = ({ dataSource, loading }) => {
             width: 200,
             render: (text, record) => (
                 <div style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <img src={"https://res.cloudinary.com/asadaziz/image/upload/v1561444483/dummyavatar_kb3aub.png"} height={60} width={60} />
+                    <img src={record.auction_image_url !== null? record.auction_image_url  : "https://res.cloudinary.com/asadaziz/image/upload/v1561444483/dummyavatar_kb3aub.png"} height={60} width={60} />
                 </div>
             )
         },
@@ -91,6 +91,7 @@ const TableComponent = ({ dataSource, loading }) => {
 
     const handleEdit = (data) => {
         console.log("data", data)
+        record(data)
     }
     const openLink = (link) => {
         window.open(link)

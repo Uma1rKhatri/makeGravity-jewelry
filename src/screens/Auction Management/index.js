@@ -12,6 +12,8 @@ import { auctionAdd, auctionGet } from '../../redux/actions/auction-action'
 const AuctionList = () => {
     const dispatch = useDispatch();
     const dataState = useSelector((state) => state)
+    const [edit, setEdit] =  useState(false)
+    const [editRecord, setEditRecord] = useState({})
     const [dataSource, setDataSource] = useState([
        
     ])
@@ -62,6 +64,17 @@ const AuctionList = () => {
         fetchAuction()
 
     }, [])
+
+    const handleClose = (val) =>{
+        console.log("vla", val)
+        setEdit(val)
+    }
+
+    const handleEdit = (data) => {
+        console.log("66", data)
+        setEditRecord(data)
+        setEdit(true)
+    }
    
 
     return (
@@ -88,7 +101,7 @@ const AuctionList = () => {
                         </Col>
 
                         <Col xs={24} sm={12} md={16} className="gr-mb-2">
-                          <AuctionAddComponent auction={handleSubmit} />
+                          <AuctionAddComponent auction={handleSubmit} edit={edit} editClose={handleClose} record={editRecord} />
 
                         </Col>
                         <Col xs={24} sm={12} md={6} className="gr-mb-2">
@@ -99,6 +112,7 @@ const AuctionList = () => {
                         <Col span={24}>
                             <TableComponent dataSource={dataSource}
                             loading={dataState?.auctionGet?.loading}
+                            record={handleEdit}
                             />
                         </Col>
                     </Row>
