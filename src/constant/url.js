@@ -1,1 +1,1 @@
-export const baseURL =  "https://make-gravity-jwelery.herokuapp.com/api/"
+export const baseURL = process.env.REACT_APP_BASE_URL
