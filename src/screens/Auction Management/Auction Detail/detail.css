@@ -1,0 +1,43 @@
+.datepicker {
+    width: 100%;
+}
+
+.ant-picker {
+    display: block !important;
+}
+
+.ant-form-item-label {
+    font-family: cursive
+}
+
+
+.carousel.carousel-slider  {
+   height: 220px;
+}
+
+.img-stl {
+    object-fit: contain !important;
+
+    /* vertical-align: middle;
+    max-width: 100%;
+    height: auto; */
+  }
+
+
+  .slider-item-div {
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+.carousel-style {
+    height: 100% !important;
+}
+
+.img-stl{
+   
+    max-width: 100%;
+  max-height: 100%;
+object-fit: contain;
+}

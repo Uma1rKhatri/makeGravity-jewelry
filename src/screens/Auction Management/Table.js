@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Table, Empty, Spin } from 'antd'
-import { EditOutlined, LinkOutlined } from '@ant-design/icons'
+import { Table, Empty, Spin, Tooltip } from 'antd'
+import { EditOutlined, LinkOutlined, FundProjectionScreenOutlined } from '@ant-design/icons'
 import Loader from 'react-loader-spinner';
 import moment from 'moment';
-import mainLogo from'./image.png';
+import mainLogo from './image.png';
+import { useHistory } from 'react-router-dom';
 const TableComponent = ({ dataSource, loading, record }) => {
     const [flag, setFlag] = useState(false)
+    const history = useHistory();
 
     const columns = [
         {
@@ -15,7 +17,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
             width: 200,
             render: (text, record) => (
                 <div style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <img src={record.auction_image_url !== null? record.auction_image_url  : require('./image.png').default} alt="image" height={60} width={60} />
+                    <img src={record.auction_image_url !== null ? record.auction_image_url : require('./image.png').default} alt="image" height={60} width={60} />
                 </div>
             )
         },
@@ -26,7 +28,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
             width: 200,
             render: (text, record) => (
                 <div style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                 <strong style={{fontSize:"14px"}} >{text}</strong>  
+                    <strong style={{ fontSize: "14px" }} >{text}</strong>
                     <LinkOutlined style={{ color: "rgb(114, 120, 204)", position: 'relative', top: 0, left: 10 }} onClick={() => { openLink(record.auction_url); }} className="link" />
                 </div>
             )
@@ -38,11 +40,11 @@ const TableComponent = ({ dataSource, loading, record }) => {
             width: 200,
             sorter: {
                 compare: (a, b) =>
-                  (a.sales.length) -
-                  (b.sales.length),
+                    (a.sales.length) -
+                    (b.sales.length),
                 multiple: 2,
-              },
-              render: (text, record) => (
+            },
+            render: (text, record) => (
                 <div>{"$ 521"}</div>)
         },
         {
@@ -72,17 +74,29 @@ const TableComponent = ({ dataSource, loading, record }) => {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            width: 80,
+            width: 120,
             render: (text, record) => (
                 <div>
-                    <EditOutlined
-                        className="actionTooltip"
-                        onClick={() => handleEdit(record)}
-                        style={{
-                            color: "green",
-                            marginRight: 10,
-                        }}
-                    />
+                    <Tooltip title="Edit">
+                        <EditOutlined
+                            className="actionTooltip"
+                            onClick={() => handleEdit(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Detail">
+                        <FundProjectionScreenOutlined
+                            className="actionTooltip"
+                            onClick={() => handleDetail(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip>
 
 
                 </div>)
@@ -97,7 +111,9 @@ const TableComponent = ({ dataSource, loading, record }) => {
     const openLink = (link) => {
         window.open(link)
     };
-
+    const handleDetail = (data) => {
+        history.push(`auction-detail/${data.id}`)
+    }
     return (
         <>
             <div className="user-table">
