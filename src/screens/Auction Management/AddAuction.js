@@ -205,66 +205,78 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                     onFinish={handleSubmit}
                 >
                     <Row>
+                    {!edit &&
+                        <>
+                        <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+
+                       
+                              
+                            <Form.Item
+                                label="Source"
+                                name="source"
+                               
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 23  }}
+                                rules={[{ required: true, message: "Please input source!" }]}
+                            >
+                                <Input placeholder="source"   />
+                            </Form.Item>
+                        </Col>
+                        <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+                        <Form.Item
+                            label="Category"
+                            name="category"
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+                            rules={[{ required: true, message: "Please input category!" }]}
+                        >
+                            <Input placeholder="Category" className="inp" disabled={edit} />
+                        </Form.Item>
+                        </Col>
+                        <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+                            <Form.Item
+                                label="Auction Name"
+                                name="auction_name"
+                           
+                                labelCol={{ span: 24  }}
+                                wrapperCol={{ span: 23  }}
+                                rules={[{ required: true, message: "Please input auction name!" }]}
+                            >
+                                <Input placeholder="Auction Name" className="inp"  />
+                            </Form.Item>
+                        </Col>
+                        <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+                        <Form.Item
+                            label="Auction URL"
+                            name="auction_url"
+
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+                            rules={[{ required: true, message: "Please input auction URL!" }, {
+                                pattern: new RegExp(
+                                    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+                                ),
+                                message: "Invalid URL string!",
+                            }]}
+                        >
+                            <Input placeholder="mysite" className="inp"  />
+                        </Form.Item>
+                        </Col>
                         <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
+                        <Form.Item
+                            label="Select Date"
+                            name="dataPicker"
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
 
-                            {!edit &&
-                                <>
-                                    <Form.Item
-                                        label="Source"
-                                        name="source"
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-                                        rules={[{ required: true, message: "Please input source!" }]}
-                                    >
-                                        <Input placeholder="source" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        label="Auction Name"
-                                        name="auction_name"
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-                                        rules={[{ required: true, message: "Please input auction name!" }]}
-                                    >
-                                        <Input placeholder="Auction Name" className="inp" />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        label="Auction URL"
-                                        name="auction_url"
-
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-                                        rules={[{ required: true, message: "Please input auction URL!" }, {
-                                            pattern: new RegExp(
-                                                /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-                                            ),
-                                            message: "Invalid URL string!",
-                                        }]}
-                                    >
-                                        <Input placeholder="mysite" className="inp" disabled={edit} />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Category"
-                                        name="category"
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-                                        rules={[{ required: true, message: "Please input category!" }]}
-                                    >
-                                        <Input placeholder="Category" className="inp" disabled={edit} />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Select Date"
-                                        name="dataPicker"
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-
-                                        {...rangeConfig}
-                                    >
-                                        <RangePicker className="gx-w-100" disabled={edit} />
-                                    </Form.Item>
-                                </>
+                            {...rangeConfig}
+                        >
+                            <RangePicker className="gx-w-100"  />
+                        </Form.Item>
+                        </Col>
+                        </>
                             }
+                        <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
                                 label="Auction Details"
                                 name="auction_details_text"
@@ -274,7 +286,9 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                             >
                                 <Input.TextArea placeholder="Auction Details" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                             </Form.Item>
-                            {edit &&
+                        </Col>
+                        {edit &&
+                            <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                                 <Form.Item
                                     label="Notes"
                                     name="notes_text"
@@ -283,8 +297,9 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                                 >
                                     <Input.TextArea placeholder="Notes" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                                 </Form.Item>
-                            }
-
+                            </Col>
+                        }
+                        <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
                                 label="Hidden Item"
                                 name="hidden"
@@ -292,14 +307,16 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                                 wrapperCol={{ span: 24 }}
                                 initialValue={check}
                             >
-                                <Checkbox 
-                                checked={check}
-                                //value={check} 
-                               //defaultChecked={check} 
-                                onChange={onChange}>Show Hidden</Checkbox>
+                                <Checkbox
+                                    checked={check}
+                                    //value={check} 
+                                    //defaultChecked={check} 
+                                    onChange={onChange}>Show Hidden</Checkbox>
 
                             </Form.Item>
-                            {!edit &&
+                        </Col>
+                        {!edit &&
+                            <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                                 <Form.Item
                                     name="image"
                                     //  rules={[{ required: true, message: "Please select image!" }]}
@@ -318,26 +335,28 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                                             from uploading company data or other band files
                                         </p>
                                     </Dragger>
-                                </Form.Item>}
-                            {progressFlagSuccess ? (
-                                <div>
-                                    {progress !== 0 ? (
-                                        <Progress
-                                            style={{ marginLeft: "10px", marginBottom: "10px" }}
-                                            percent={progress}
-                                        />
-                                    ) : null}
-                                    <p
-                                        style={{
-                                            color: "green",
-                                            fontWeight: "500",
-                                        }}
-                                    >
-                                        {fileObject.name}
-                                    </p>
-                                </div>
-                            ) : null}
-                        </Col>
+                                </Form.Item>
+                            </Col>
+                        }
+                        {progressFlagSuccess ? (
+                            <div>
+                                {progress !== 0 ? (
+                                    <Progress
+                                        style={{ marginLeft: "10px", marginBottom: "10px" }}
+                                        percent={progress}
+                                    />
+                                ) : null}
+                                <p
+                                    style={{
+                                        color: "green",
+                                        fontWeight: "500",
+                                    }}
+                                >
+                                    {fileObject.name}
+                                </p>
+                            </div>
+                        ) : null}
+
                     </Row>
                 </Form>
             </Modal>
