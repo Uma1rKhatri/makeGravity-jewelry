@@ -12,16 +12,17 @@ const DemoCarousel = () => {
 
 
         <Carousel className="carousel-style">
-            <div  >
-                <img src={Img1} className="img-stl" />
+            <div style={{height:'250px'}}>
+                
+                <img src={Img1} style={{height:'100%'}}  />
 
             </div>
-            <div>
-                <img src={Img2} className="img-stl" />
+            <div style={{height:'250px'}}>
+                <img src={Img2} style={{height:'100%'}}   />
 
             </div>
-            <div>
-                <img src={Img3} className="img-stl" />
+            <div style={{height:'250px'}}>
+                <img src={Img3} style={{height:'100%'}}   />
 
             </div>
         </Carousel>

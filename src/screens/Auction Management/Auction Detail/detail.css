@@ -10,9 +10,15 @@
     font-family: cursive
 }
 
+ /* .carousel.carousel-slider  {
+  
+    object-fit: cover !important;
+    height: 400px !important;
+    width: 100% !important;
+}  */
 
-.carousel.carousel-slider  {
-   height: 220px;
+.testImg{
+    background-image: url('../../../assets/1.png');
 }
 
 .img-stl {
