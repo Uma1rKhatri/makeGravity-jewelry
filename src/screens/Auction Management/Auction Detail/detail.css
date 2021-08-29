@@ -54,3 +54,10 @@ width: -webkit-fill-available;
         margin-bottom: 10px !important
     }
 }
+
+.add-component {
+    border: 1px ridge #4919b9;
+    background-color: rgb(251, 251, 253);
+    margin-bottom: 20px;
+    padding: 10px;
+}

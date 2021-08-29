@@ -140,7 +140,7 @@ const AddDetail = () => {
                                     {
                                         fields.map(({ key, name, fieldKey, ...restField }) => (
 
-                                            <div key={key}>
+                                            <div key={key} className="add-component">
                                                 <Form.Item
                                                     label="Pick List"
                                                     {...restField} key={key}
@@ -148,10 +148,10 @@ const AddDetail = () => {
                                                     wrapperCol={{ span: 23 }}
 
                                                 >
-                                                    <Select defaultValue="lucy" onChange={handleChange}>
-                                                        <Option value="jack">Jack</Option>
-                                                        <Option value="lucy">Lucy</Option>
-                                                        <Option value="Yiminghe">yiminghe</Option>
+                                                    <Select defaultValue="list" onChange={handleChange}>
+                                                        <Option value="list">List</Option>
+                                                        <Option value="string">String</Option>
+                                                        <Option value="number">Number</Option>
                                                     </Select>
                                                 </Form.Item>
                                             </div>
@@ -159,7 +159,7 @@ const AddDetail = () => {
                                     }
                                     {/* {arr.length <= 2 ? */}
                                     <Form.Item className="mt-4">
-                                        <Button onClick={() => { add() }} block icon={<PlusOutlined />} > Add field </Button>
+                                        <Button onClick={() => { add() }} block icon={<PlusOutlined />} > Add Component </Button>
                                     </Form.Item>
 
                                     {/* : null} */}
