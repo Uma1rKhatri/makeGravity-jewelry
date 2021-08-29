@@ -2,7 +2,8 @@ import React from "react";
 import { Layout, Row, Col, Breadcrumb } from 'antd'
 import Detail from './auction-detail';
 import { useHistory } from 'react-router-dom'
-import DemoCarousel from './slider'
+import DemoCarousel from './slider';
+import AddDetail from './add-auction-detail';
 const AuctionDetail = () => {
 
     const { Content } = Layout;
@@ -36,8 +37,8 @@ const AuctionDetail = () => {
                                 <DemoCarousel />
                             </Col>
 
-                            <Col xs={24} sm={24} md={24} className="gr-mb-2">
-
+                            <Col className="gr-mb-2">
+                            <AddDetail span={24} />
 
                             </Col>
                             <Col xs={24} sm={12} md={6} className="gr-mb-2">
