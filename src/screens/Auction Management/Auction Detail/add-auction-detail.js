@@ -4,9 +4,9 @@ import moment from "moment";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import './detail.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { jewelryGet } from '../../../redux/actions/jewelery-action';
+import { jewelryGet, pickListGet } from '../../../redux/actions/jewelery-action';
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR } from '../../../constant/redux-type'
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [1]
 const AddDetail = ({ }) => {
@@ -17,7 +17,9 @@ const AddDetail = ({ }) => {
     const [items, setItems] = useState(['jack', 'lucy'])
     const [newName, setName] = useState('')
     const [pickList, setPickList] = useState([])
-    const [jewelery ,setJewelery] = useState([])
+    const [jewelery, setJewelery] = useState([])
+    const [picker, setPicker] = useState([])
+
 
 
     useEffect(() => {
@@ -27,9 +29,8 @@ const AddDetail = ({ }) => {
             if (result.type === JEWELERY_GET_SUCCESS) {
                 console.log("result", result.response.data.data)
                 setJewelery(result.response.data.data)
-                // form.setFieldsValue({
-                //     jewelry_classification: result.response.data.data
-                // })
+            } else if (result.type === JEWELERY_GET_ERROR) {
+                setJewelery([])
             }
         })
 
@@ -45,8 +46,10 @@ const AddDetail = ({ }) => {
         setName('')
     };
     function handleChange(value, fieldIndex) {
+        console.log("value", value, fieldIndex)
+        console.log("list", picker[fieldIndex].data_type_desc)
         let temp = pickList;
-        temp[fieldIndex] = value;
+        temp[fieldIndex] = picker[fieldIndex].data_type_desc;
         setPickList(prev => [...prev]);
 
         console.log(`selected ${value}`);
@@ -67,6 +70,15 @@ const AddDetail = ({ }) => {
 
     const handleChangeValue = (val) => {
         console.log(`val = ${val}`);
+        dispatch(pickListGet(val)).then((result) => {
+
+            if (result.type === PICKLIST_GET_SUCCESS) {
+                console.log("result", result.response.data.data)
+                setPicker(result.response.data.data)
+            } else if (result.type === PICKLIST_GET_ERROR) {
+                setPicker([])
+            }
+        })
     }
 
     const removeNewField = (fieldIndex) => {
@@ -90,7 +102,7 @@ const AddDetail = ({ }) => {
         arr.push(arr.length + 1)
     }
 
-console.log("jew", jewelery)
+    console.log("jew", jewelery)
     return (
         <React.Fragment>
             <Form
@@ -274,10 +286,10 @@ console.log("jew", jewelery)
 
                         >
                             <Select onChange={handleChangeValue}>
-                                {jewelery && jewelery.length && jewelery.map((val, index)=>{
-                                  return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
+                                {jewelery && jewelery.length && jewelery.map((val, index) => {
+                                    return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
                                 })}
-                              
+
                             </Select>
                         </Form.Item>
                     </Col>
@@ -296,7 +308,7 @@ console.log("jew", jewelery)
                                                 </div>
 
                                                 <Form.Item
-                                                    label="Pick List"
+                                                    label="Component"
                                                     //  name={`Pick${name + 1}`}
                                                     {...restField} key={key}
                                                     labelCol={{ span: 24 }}
@@ -305,14 +317,17 @@ console.log("jew", jewelery)
                                                 >
 
                                                     <Select onChange={(e) => handleChange(e, name)}>
-                                                        <Option value="list">List</Option>
-                                                        <Option value="string">String</Option>
-                                                        <Option value="number">Number</Option>
+                                                        {
+                                                            picker && picker.length && picker.map((val, index)=>{
+                                                                return  <Option value={val.id} key={index} >{val.component_detail_nm}</Option>
+                                                            })
+                                                        }
+                                                    
                                                     </Select>
                                                 </Form.Item>
 
 
-                                                {pickList[name] === "list" ?
+                                                {pickList[name] === "pick list" ?
                                                     <>
                                                         <Divider />
                                                         <Form.Item
@@ -348,21 +363,9 @@ console.log("jew", jewelery)
                                                             </Select>
                                                         </Form.Item>
                                                     </>
-                                                    : pickList[name] === "string" ?
-                                                        <>
-                                                            <Divider />
-
-                                                            <Form.Item
-                                                                label="Text"
-
-
-                                                                labelCol={{ span: 24 }}
-                                                                wrapperCol={{ span: 24 }}
-
-                                                            >
-                                                                <Input placeholder="Text" className="inp" />
-                                                            </Form.Item></>
-                                                        : pickList[name] === "number" ?
+                                                    : 
+                                                       
+                                                         pickList[name] === "number" ?
                                                             <>
                                                                 <Divider />
                                                                 <Form.Item
@@ -375,7 +378,19 @@ console.log("jew", jewelery)
                                                                 >
                                                                     <InputNumber min={0} placeholder="0" />
                                                                 </Form.Item></> :
-                                                            null
+                                                                <>
+                                                            <Divider />
+
+                                                            <Form.Item
+                                                                label="Text"
+
+
+                                                                labelCol={{ span: 24 }}
+                                                                wrapperCol={{ span: 24 }}
+
+                                                            >
+                                                                <Input placeholder="Text" className="inp" />
+                                                            </Form.Item></>
                                                 }
                                             </div>
                                         ))
