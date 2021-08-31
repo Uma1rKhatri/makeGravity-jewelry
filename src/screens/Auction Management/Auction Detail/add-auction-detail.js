@@ -4,9 +4,9 @@ import moment from "moment";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import './detail.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { jewelryGet, pickListGet } from '../../../redux/actions/jewelery-action';
+import { jewelryGet, jeweleryAttributeGet, pickListGet } from '../../../redux/actions/jewelery-action';
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR } from '../../../constant/redux-type'
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [1]
 const AddDetail = ({ }) => {
@@ -14,7 +14,7 @@ const AddDetail = ({ }) => {
     const dispatch = useDispatch();
     const dateFormat = 'YYYY/MM/DD';
     const { Option } = Select;
-    const [items, setItems] = useState(['jack', 'lucy'])
+    const [items, setItems] = useState([])
     const [newName, setName] = useState('')
     const [pickList, setPickList] = useState([])
     const [jewelery, setJewelery] = useState([])
@@ -48,6 +48,17 @@ const AddDetail = ({ }) => {
     function handleChange(value, fieldIndex) {
         console.log("value", value, fieldIndex)
         console.log("list", picker[fieldIndex].data_type_desc)
+        if (picker[fieldIndex].data_type_desc === "pick list") {
+            dispatch(pickListGet(picker[fieldIndex].ddl_id)).then((result) => {
+
+                if (result.type === PICKLIST_GET_SUCCESS) {
+                    console.log("result", result.response.data.data)
+                    setItems(result.response.data.data)
+                } else if (result.type === PICKLIST_GET_ERROR) {
+                    setItems([])
+                }
+            })
+        }
         let temp = pickList;
         temp[fieldIndex] = picker[fieldIndex].data_type_desc;
         setPickList(prev => [...prev]);
@@ -70,12 +81,12 @@ const AddDetail = ({ }) => {
 
     const handleChangeValue = (val) => {
         console.log(`val = ${val}`);
-        dispatch(pickListGet(val)).then((result) => {
+        dispatch(jeweleryAttributeGet(val)).then((result) => {
 
-            if (result.type === PICKLIST_GET_SUCCESS) {
+            if (result.type === JEWELERY_ATTRIBUTE_GET_SUCCESS) {
                 console.log("result", result.response.data.data)
                 setPicker(result.response.data.data)
-            } else if (result.type === PICKLIST_GET_ERROR) {
+            } else if (result.type === JEWELERY_ATTRIBUTE_GET_ERROR) {
                 setPicker([])
             }
         })
@@ -318,11 +329,11 @@ const AddDetail = ({ }) => {
 
                                                     <Select onChange={(e) => handleChange(e, name)}>
                                                         {
-                                                            picker && picker.length && picker.map((val, index)=>{
-                                                                return  <Option value={val.id} key={index} >{val.component_detail_nm}</Option>
+                                                            picker && picker.length && picker.map((val, index) => {
+                                                                return <Option value={val.id} key={index} >{val.component_detail_nm}</Option>
                                                             })
                                                         }
-                                                    
+
                                                     </Select>
                                                 </Form.Item>
 
@@ -357,28 +368,29 @@ const AddDetail = ({ }) => {
                                                                     </div>
                                                                 )}
                                                             >
-                                                                {items.map(item => (
-                                                                    <Option key={item}>{item}</Option>
+                                                                {items && items.length && items.map(item => (
+
+                                                                    <Option key={item.id}>{item.list_member_txt}</Option>
                                                                 ))}
                                                             </Select>
                                                         </Form.Item>
                                                     </>
-                                                    : 
-                                                       
-                                                         pickList[name] === "number" ?
-                                                            <>
-                                                                <Divider />
-                                                                <Form.Item
-                                                                    label="Value"
+                                                    :
+
+                                                    pickList[name] === "number" ?
+                                                        <>
+                                                            <Divider />
+                                                            <Form.Item
+                                                                label="Value"
 
 
-                                                                    labelCol={{ span: 24 }}
-                                                                    wrapperCol={{ span: 24 }}
+                                                                labelCol={{ span: 24 }}
+                                                                wrapperCol={{ span: 24 }}
 
-                                                                >
-                                                                    <InputNumber min={0} placeholder="0" />
-                                                                </Form.Item></> :
-                                                                <>
+                                                            >
+                                                                <InputNumber min={0} placeholder="0" />
+                                                            </Form.Item></> :
+                                                        <>
                                                             <Divider />
 
                                                             <Form.Item

@@ -1,25 +1,25 @@
 import {
-   PICKLIST_GET_REQUEST,
-   PICKLIST_GET_SUCCESS,
-   PICKLIST_GET_ERROR
+    JEWELERY_ATTRIBUTE_GET_REQUEST,
+    JEWELERY_ATTRIBUTE_GET_SUCCESS,
+  JEWELERY_ATTRIBUTE_GET_ERROR
    } from "../../../constant/redux-type";
    
-   const pickListGet = (state = {}, action) => {
+   const jeweleryAttributeGet = (state = {}, action) => {
        switch (action.type) {
-           case PICKLIST_GET_REQUEST: {
+           case JEWELERY_ATTRIBUTE_GET_REQUEST: {
                let obj = {
                    loading: true
                };
                return obj;
            }
-           case PICKLIST_GET_SUCCESS: {
+           case JEWELERY_ATTRIBUTE_GET_SUCCESS: {
                let obj = {
                    loading: false,
                    data: action.response
                };
                return obj;
            }
-           case PICKLIST_GET_ERROR: {
+           case JEWELERY_ATTRIBUTE_GET_ERROR: {
                let obj = {
                    loading: false,
                    status: action.response.status
@@ -31,4 +31,4 @@ import {
        }
    };
    
-   export default pickListGet;
+   export default jeweleryAttributeGet;
