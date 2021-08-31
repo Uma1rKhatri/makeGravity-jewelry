@@ -1,5 +1,5 @@
 import { baseURL } from "../../constant/url";
-import { AUCTION_GET_REQUEST, AUCTION_GET_SUCCESS, AUCTION_GET_ERROR, AUCTION_ADD_REQUEST, AUCTION_ADD_SUCCESS, AUCTION_ADD_ERROR, AUCTION_EDIT_REQUEST, AUCTION_EDIT_SUCCESS, AUCTION_EDIT_ERROR } from "../../constant/redux-type";
+import { AUCTION_GET_REQUEST, AUCTION_GET_SUCCESS, AUCTION_GET_ERROR, AUCTION_ADD_REQUEST, AUCTION_ADD_SUCCESS, AUCTION_ADD_ERROR, AUCTION_EDIT_REQUEST, AUCTION_EDIT_SUCCESS, AUCTION_EDIT_ERROR,  AUCTION_GET_ID_REQUEST, AUCTION_GET_ID_SUCCESS,  AUCTION_GET_ID_ERROR } from "../../constant/redux-type";
 
 
 const axios = require("axios");
@@ -94,5 +94,31 @@ export const auctionEdit = (data) => dispatch => {
       if (error.response.status === 400) {
       }
       return dispatch({ type: AUCTION_EDIT_ERROR, response: error.response });
+    });
+};
+
+export const auctionIdGet = (id) => dispatch => {
+  dispatch({ type: AUCTION_GET_ID_REQUEST });
+  
+
+  return axios({
+    method: "GET",
+    url: `${baseURL}auction/${id}`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }
+  })
+    .then(response => {
+      return dispatch({ type: AUCTION_GET_ID_SUCCESS, response: response });
+    })
+    .catch(error => {
+      console.log("error", error)
+      if (error.message === "Network Error") {
+        return dispatch({ type: AUCTION_GET_ID_ERROR, response: error.message });
+      }
+      if (error.response.status === 400) {
+      }
+      return dispatch({ type: AUCTION_GET_ID_ERROR, response: error.response });
     });
 };

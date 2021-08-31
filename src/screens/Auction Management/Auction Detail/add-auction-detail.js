@@ -2,20 +2,36 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Form, Input, DatePicker, InputNumber, Button, Checkbox, Select, Divider } from 'antd'
 import moment from "moment";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
-import './detail.css'
+import './detail.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { jewelryGet } from '../../../redux/actions/jewelery-action';
+import DemoCarousel from './slider';
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [1]
-const AddDetail = () => {
+const AddDetail = ({ }) => {
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
     const dateFormat = 'YYYY/MM/DD';
     const { Option } = Select;
     const [items, setItems] = useState(['jack', 'lucy'])
     const [newName, setName] = useState('')
     const [pickList, setPickList] = useState([])
+    const [jewelery ,setJewelery] = useState([])
 
 
     useEffect(() => {
         form.setFields([{ name: "auction", value: arr }]);
+        dispatch(jewelryGet()).then((result) => {
+
+            if (result.type === JEWELERY_GET_SUCCESS) {
+                console.log("result", result.response.data.data)
+                setJewelery(result.response.data.data)
+                // form.setFieldsValue({
+                //     jewelry_classification: result.response.data.data
+                // })
+            }
+        })
 
     }, [])
     const onNameChange = event => {
@@ -42,7 +58,6 @@ const AddDetail = () => {
         //     hidden: e.target.checked
         // })
     }
-    console.log(form.getFieldValue('estimate_low'))
     const handleSubmit = () => {
         form.validateFields().then((values) => {
             console.log("values", values)
@@ -74,8 +89,8 @@ const AddDetail = () => {
     const newMethod = () => {
         arr.push(arr.length + 1)
     }
-    console.log("setPickList", pickList)
 
+console.log("jew", jewelery)
     return (
         <React.Fragment>
             <Form
@@ -86,7 +101,90 @@ const AddDetail = () => {
 
             >
                 <Row>
+                    <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
 
+
+
+                        <Form.Item
+                            label="Source"
+                            name="source"
+                            //  initialValue={val && val.source}
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 23 }}
+
+                        >
+
+                            <Input placeholder="source" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
+                        <Form.Item
+                            label="Auction Name"
+                            name="auction_name"
+
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 23 }}
+
+                        >
+                            <Input placeholder="Auction Name" className="inp" />
+                        </Form.Item>
+                    </Col>
+                    <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
+                        <Form.Item
+                            label="Auction Lot Number"
+                            name="auction_lot_number"
+
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+
+                        >
+                            <Input placeholder="Auction Lot" className="inp" />
+                        </Form.Item>
+                    </Col>
+                    <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
+                        <Form.Item
+                            label="Link to Item"
+                            name="auction_lot_url"
+
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 23 }}
+
+                        >
+                            <Input placeholder="mysite" className="inp" />
+                        </Form.Item>
+                    </Col>
+                    <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
+                        <Form.Item
+                            label="Start Date"
+                            name="start_date"
+
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 23 }}
+
+                        >
+                            <DatePicker className="inp" wrapperClassName="datepicker" />
+                        </Form.Item>
+                    </Col>
+                    <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
+                        <Form.Item
+                            label="End Date"
+                            name="end_date"
+
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+
+                        >
+                            <DatePicker className="inp" wrapperClassName="datepicker" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row justify="space-around">
+                    <Col xs={24} sm={15} md={10} className="gr-mb-2">
+                        <DemoCarousel />
+                    </Col>
+                </Row>
+                <Row>
                     <Col className="ant-col-md-6 ant-col-sm-12 ant-col-xs-24">
 
 
@@ -175,10 +273,11 @@ const AddDetail = () => {
                             wrapperCol={{ span: 23 }}
 
                         >
-                            <Select defaultValue="lucy" onChange={handleChangeValue}>
-                                <Option value="jack">Jack</Option>
-                                <Option value="lucy">Lucy</Option>
-                                <Option value="Yiminghe">yiminghe</Option>
+                            <Select onChange={handleChangeValue}>
+                                {jewelery && jewelery.length && jewelery.map((val, index)=>{
+                                  return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
+                                })}
+                              
                             </Select>
                         </Form.Item>
                     </Col>

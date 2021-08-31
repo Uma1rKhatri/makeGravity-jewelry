@@ -1,17 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Row, Col, Breadcrumb } from 'antd'
 import Detail from './auction-detail';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import DemoCarousel from './slider';
 import AddDetail from './add-auction-detail';
+import { useDispatch, useSelector } from 'react-redux';
+import { auctionIdGet } from "../../../redux/actions/auction-action"
+
 const AuctionDetail = () => {
 
     const { Content } = Layout;
     const history = useHistory()
+    const location = useLocation();
+    const dispatch = useDispatch();
+    // const [record, setRecord] = useState({})
+    // const [lot, setLot] = useState();
+
     const breadCrumpRouting = () => {
         console.log("click")
         history.push('/auction-management')
     }
+
+    useEffect(() => {
+        let id = location.pathname.split("/");
+        // dispatch(auctionIdGet(id[2])).then((result) => {
+
+        //     if (result.type === "AUCTION_GET_ID_SUCCESS") {
+        //         let data = result?.response?.data?.data;
+        //         setRecord(data)
+        //     }
+        // })
+
+
+    }, [])
+    // const handleLot = (val) => {
+    //     console.log("val", val)
+    //     setLot(val)
+    // }
     return (
         <React.Fragment>
 
@@ -29,22 +54,17 @@ const AuctionDetail = () => {
                     </Breadcrumb>
                     <div style={{ marginTop: "10px" }} >
                         <Row justify="space-around">
-                            <Col span={24} className="gr-mb-2">
-                                <Detail />
-                            </Col>
+                            {/* <Col span={24} className="gr-mb-2">
+                                <Detail data={record} lot={handleLot} />
+                            </Col> */}
 
-                            <Col xs={24} sm={10} md={10} className="gr-mb-2">
-                                <DemoCarousel />
-                            </Col>
+                           
 
                             <Col className="gr-mb-2">
-                            <AddDetail span={24} />
+                                <AddDetail span={24}  />
 
                             </Col>
-                            <Col xs={24} sm={12} md={6} className="gr-mb-2">
 
-
-                            </Col>
 
                             <Col span={24}>
 

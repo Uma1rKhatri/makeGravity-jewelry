@@ -5,6 +5,8 @@ import userAdd from "./user/user-add-reducer"
 import auctionAdd from "./auction/auction-add-reducer";
 import auctionGet  from "./auction/user-get-reducer";
 import auctionEdit from "./auction/auction-edit-reducer";
+import auctionIdGet from "./auction/auction-id-get-reducer";
+import jeweleryGet from "./jewelery/jewelery-get-reducer";
 
 export default combineReducers({
   login,
@@ -12,5 +14,7 @@ export default combineReducers({
   userAdd,
   auctionAdd,
   auctionGet,
-  auctionEdit
+  auctionEdit,
+  auctionIdGet,
+  jeweleryGet
 });
