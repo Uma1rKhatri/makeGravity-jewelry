@@ -12,6 +12,7 @@ import pickListGet from "./jewelery/pickList-get-reducer";
 import collectionAdd from "./collection/collection-add-reducer";
 import collectionGet from "./collection/collection-get-reducer";
 import collectionEdit from "./collection/collection-edit-reducer";
+import auctionItemGet from "./auction item/auction-item-get-reducer";
 
 export default combineReducers({
   login,
@@ -26,5 +27,6 @@ export default combineReducers({
   pickListGet,
   collectionAdd,
   collectionGet,
-  collectionEdit
+  collectionEdit,
+  auctionItemGet
 });

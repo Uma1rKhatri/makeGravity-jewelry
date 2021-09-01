@@ -140,7 +140,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
                     bordered={true}
                     align="left"
                     locale={{
-                        emptyText: <Empty description={"No Auction in the database "} />,
+                        emptyText: <Empty description={"No Auction Item in the database "} />,
                     }}
                 />
             </div>

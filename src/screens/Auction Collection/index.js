@@ -104,7 +104,7 @@ const AuctionCollection = () => {
 
                         <Col span={24}>
                             <TableComponent dataSource={dataSource}
-                                loading={dataState?.auctionGet?.loading}
+                                loading={dataState?.collectionGet?.loading}
                                 record={handleEdit}
                             />
                         </Col>
