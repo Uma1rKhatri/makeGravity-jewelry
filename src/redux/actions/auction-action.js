@@ -38,7 +38,7 @@ export const auctionAdd = (data) => dispatch => {
   form.append("start_date", data.start_date);
   form.append("end_date", data.end_date);
   form.append("auction_details_text", data.auction_details_text);
-  form.append("hidden", data.hidden);
+  form.append("hide", data.hide);
   if (data.image !== undefined)
     form.append("auction_image", data.auction_image);
   console.log("data", data)
@@ -71,7 +71,7 @@ export const auctionEdit = (data) => dispatch => {
   let form = new FormData();
   form.append("auction_details_text", data.auction_details_text);
   form.append("notes_text", data.notes_text);
-  form.append("hidden", data.hidden);
+  form.append("hide", data.hide);
 
 
   return axios({

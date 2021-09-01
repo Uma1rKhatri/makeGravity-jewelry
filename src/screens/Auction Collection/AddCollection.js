@@ -82,7 +82,7 @@ const AuctionCollectionAddComponent = ({ collection, edit, editClose, record, co
 
         editClose(false)
         form.setFieldsValue({
-            hidden: false
+            hide: false
         })
         // form.setFieldsValue({
         //     notes_text: null,
@@ -102,7 +102,7 @@ const AuctionCollectionAddComponent = ({ collection, edit, editClose, record, co
         setProgress(0);
         setFileObject({});
         form.setFieldsValue({
-            hidden: false
+            hide: false
         })
 
     };

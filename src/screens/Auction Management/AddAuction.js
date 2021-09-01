@@ -82,7 +82,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
 
         editClose(false)
         form.setFieldsValue({
-            hidden: false
+            hide: false
         })
         // form.setFieldsValue({
         //     notes_text: null,
@@ -102,7 +102,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
         setProgress(0);
         setFileObject({});
         form.setFieldsValue({
-            hidden: false
+            hide: false
         })
 
     };
@@ -153,7 +153,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
         console.log(`checked = ${e.target.checked}`);
         setCheck(e.target.checked)
         form.setFieldsValue({
-            hidden: e.target.checked
+            hide: e.target.checked
         })
     }
     const rangeConfig = {
@@ -170,10 +170,10 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
         if (edit) {
             form.setFieldsValue({
                 notes_text: record.notes_text,
-                hidden: record.hidden,
+                hide: record.hide,
                 auction_details_text: record.auction_details_text
             })
-            setCheck(record.hidden)
+            setCheck(record.hide)
         }
 
 
@@ -302,7 +302,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                         <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
                                 label="Hidden Item"
-                                name="hidden"
+                                name="hide"
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
                                 initialValue={check}
