@@ -3,7 +3,7 @@ import { Input, Form, Radio, Modal, Button, Row, Col, Select, Checkbox, DatePick
 import { InboxOutlined } from '@ant-design/icons'
 import moment from 'moment';
 
-const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) => {
+const AuctionCollectionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [check, setCheck] = useState(false)
@@ -110,18 +110,16 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
     const handleSubmit = () => {
         form.validateFields().then((values) => {
             console.log("values", values)
-            const rangeValue = values['dataPicker'];
             let data = {};
 
             data = values;
 
             if (!edit) {
-                data.start_date = rangeValue[0]._d.toISOString();
-                data.end_date = rangeValue[1]._d.toISOString();
-                if (values.image !== undefined)
-                    data.auction_image = values.image.file.originFileObj
+
+                if (values.images_file !== undefined)
+                    data.images_file = values.images_file.file.originFileObj
                 setCheck(false)
-                auction(data)
+                //   auction(data)
                 console.log("data", data)
             } else {
                 data.id = record.id
@@ -153,27 +151,20 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
         console.log(`checked = ${e.target.checked}`);
         setCheck(e.target.checked)
         form.setFieldsValue({
-            hidden: e.target.checked
+            hide: e.target.checked
         })
     }
-    const rangeConfig = {
-        rules: [
-            {
-                type: 'array',
-                required: true,
-                message: 'Please select date!',
-            },
-        ],
-    };
+
     useEffect(() => {
         setIsModalVisible(edit);
         if (edit) {
             form.setFieldsValue({
+                collection_name: record.collection_name,
                 notes_text: record.notes_text,
-                hidden: record.hidden,
-                auction_details_text: record.auction_details_text
+                hide: record.hide,
+                collection_description: record.collection_description
             })
-            setCheck(record.hidden)
+            setCheck(record.hide)
         }
 
 
@@ -205,84 +196,33 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                     onFinish={handleSubmit}
                 >
                     <Row>
-                        {!edit &&
-                            <>
-                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+
+                        <>
+                            <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
 
 
 
-                                    <Form.Item
-                                        label="Source"
-                                        name="source"
+                                <Form.Item
+                                    label="Name"
+                                    name="collection_name"
 
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 23 }}
-                                        rules={[{ required: true, message: "Please input source!" }]}
-                                    >
-                                        <Input placeholder="source" />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
-                                    <Form.Item
-                                        label="Category"
-                                        name="category"
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-                                        rules={[{ required: true, message: "Please input category!" }]}
-                                    >
-                                        <Input placeholder="Category" className="inp" disabled={edit} />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
-                                    <Form.Item
-                                        label="Auction Name"
-                                        name="auction_name"
+                                    labelCol={{ span: 24 }}
+                                    wrapperCol={{ span: 24 }}
+                                    rules={[{ required: true, message: "Please input name!" }]}
+                                >
+                                    <Input placeholder="Name" />
+                                </Form.Item>
+                            </Col>
 
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 23 }}
-                                        rules={[{ required: true, message: "Please input auction name!" }]}
-                                    >
-                                        <Input placeholder="Auction Name" className="inp" />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
-                                    <Form.Item
-                                        label="Auction URL"
-                                        name="auction_url"
 
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
-                                        rules={[{ required: true, message: "Please input auction URL!" }, {
-                                            pattern: new RegExp(
-                                                /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-                                            ),
-                                            message: "Invalid URL string!",
-                                        }]}
-                                    >
-                                        <Input placeholder="mysite" className="inp" />
-                                    </Form.Item>
-                                </Col>
-                                <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
-                                    <Form.Item
-                                        label="Select Date"
-                                        name="dataPicker"
-                                        labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
+                        </>
 
-                                        {...rangeConfig}
-                                    >
-                                        <RangePicker className="gx-w-100" />
-                                    </Form.Item>
-                                </Col>
-                            </>
-                        }
                         <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
-                                label="Auction Details"
-                                name="auction_details_text"
+                                label="Description"
+                                name="collection_description"
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
-                                rules={[{ required: true, message: "Please input detail!" }]}
                             >
                                 <Input.TextArea placeholder="Auction Details" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                             </Form.Item>
@@ -302,7 +242,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                         <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
                                 label="Hidden Item"
-                                name="hidden"
+                                name="hide"
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
                                 initialValue={check}
@@ -315,30 +255,31 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
 
                             </Form.Item>
                         </Col>
-                        {!edit &&
-                            <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
-                                <Form.Item
-                                    name="image"
-                                    //  rules={[{ required: true, message: "Please select image!" }]}
-                                    labelCol={{ span: 24 }}
-                                    wrapperCol={{ span: 24 }}
-                                >
-                                    <Dragger {...draggerProps}>
-                                        <p className="ant-upload-drag-icon">
-                                            <InboxOutlined />
-                                        </p>
-                                        <p className="ant-upload-text">
-                                            Click or drag file to this area to upload{" "}
-                                        </p>
-                                        <p className="ant-upload-hint">
-                                            Support for a single or bulk upload. Strictly prohibit
-                                            from uploading company data or other band files
-                                        </p>
-                                    </Dragger>
-                                </Form.Item>
-                            </Col>
-                        }
+
+                        <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
+                            <Form.Item
+                                name="images_file"
+                                //  rules={[{ required: true, message: "Please select image!" }]}
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Dragger {...draggerProps}>
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">
+                                        Click or drag file to this area to upload{" "}
+                                    </p>
+                                    <p className="ant-upload-hint">
+                                        Support for a single or bulk upload. Strictly prohibit
+                                        from uploading company data or other band files
+                                    </p>
+                                </Dragger>
+                            </Form.Item>
+                        </Col>
+
                         {progressFlagSuccess ? (
+
                             <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                                 <div>
                                     {progress !== 0 ? (
@@ -366,4 +307,4 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
     )
 }
 
-export default AuctionAddComponent;
+export default AuctionCollectionAddComponent;

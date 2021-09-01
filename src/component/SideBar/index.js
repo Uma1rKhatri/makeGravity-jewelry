@@ -7,7 +7,8 @@ import {
   UserOutlined,
   DashboardOutlined,
   DeploymentUnitOutlined,
-  MenuOutlined
+  MenuOutlined,
+  MoneyCollectOutlined
 } from "@ant-design/icons";
 import { Layout, Menu, Icon, Dropdown } from "antd";
 const { Sider } = Layout;
@@ -69,7 +70,7 @@ const AppSidebar = ({ props, test }) => {
                 }
                 
               > */}
-              <Menu.Item
+          <Menu.Item
             key="auction-management"
             icon={<DeploymentUnitOutlined />}
           >
@@ -77,8 +78,16 @@ const AppSidebar = ({ props, test }) => {
               <span>Auction Managment</span>
             </Link>
           </Menu.Item>
-              {/* </SubMenu> */}
-         
+          <Menu.Item
+            key="auction-collection"
+            icon={<MoneyCollectOutlined />}
+          >
+            <Link to={`/auction-collection`} className="route-link">
+              <span>Auction Collection</span>
+            </Link>
+          </Menu.Item>
+          {/* </SubMenu> */}
+
         </Menu>
       </Sider>
     </div>
