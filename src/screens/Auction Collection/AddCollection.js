@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Form, Radio, Modal, Button, Row, Col, Select, Checkbox, DatePicker, Upload, Progress, message } from 'antd'
+import { Input, Form, Modal, Button, Row, Col, Checkbox, Upload, Progress, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
-import moment from 'moment';
 
-const AuctionCollectionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) => {
+
+const AuctionCollectionAddComponent = ({ collection, edit, editClose, record, collectionEdit }) => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [check, setCheck] = useState(false)
@@ -11,7 +11,7 @@ const AuctionCollectionAddComponent = ({ auction, edit, editClose, record, aucti
     const [progressFlagSuccess, setProgressFlagSuccess] = useState(false);
     const [fileObject, setFileObject] = useState({});
     const [form] = Form.useForm();
-    const { RangePicker } = DatePicker;
+
 
     const openModal = () => {
         setCheck(false)
@@ -119,13 +119,13 @@ const AuctionCollectionAddComponent = ({ auction, edit, editClose, record, aucti
                 if (values.images_file !== undefined)
                     data.images_file = values.images_file.file.originFileObj
                 setCheck(false)
-                //   auction(data)
+                collection(data)
                 console.log("data", data)
             } else {
                 data.id = record.id
                 console.log("data", data)
                 setCheck(false)
-                auctionEdit(data)
+                collectionEdit(data)
             }
 
 
@@ -176,7 +176,7 @@ const AuctionCollectionAddComponent = ({ auction, edit, editClose, record, aucti
         <React.Fragment>
             <Button onClick={() => openModal()} style={{ background: "rgb(114, 120, 204)", color: '#fff' }} >Add</Button>
             <Modal
-                title={!edit ? "Add Auction" : "Edit Auction"}
+                title={!edit ? "Add Collection" : "Edit Collection"}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -224,7 +224,7 @@ const AuctionCollectionAddComponent = ({ auction, edit, editClose, record, aucti
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 24 }}
                             >
-                                <Input.TextArea placeholder="Auction Details" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
+                                <Input.TextArea placeholder="Collection Details" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                             </Form.Item>
                         </Col>
                         {edit &&

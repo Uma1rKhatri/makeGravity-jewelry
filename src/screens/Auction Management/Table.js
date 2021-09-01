@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Empty, Spin, Tooltip } from 'antd'
-import { EditOutlined, LinkOutlined, FundProjectionScreenOutlined } from '@ant-design/icons'
+import { EditOutlined, LinkOutlined, FundProjectionScreenOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import Loader from 'react-loader-spinner';
 import moment from 'moment';
 import mainLogo from './image.png';
@@ -98,6 +98,17 @@ const TableComponent = ({ dataSource, loading, record }) => {
                         />
                     </Tooltip>
 
+                    <Tooltip title="Collection">
+                        <MoneyCollectOutlined
+                            className="actionTooltip"
+                            onClick={() => handleCollection(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip>
+
 
                 </div>)
 
@@ -113,6 +124,9 @@ const TableComponent = ({ dataSource, loading, record }) => {
     };
     const handleDetail = (data) => {
         history.push(`auction-detail/${data.id}`)
+    }
+    const handleCollection = (data) => {
+        history.push(`auction-collection/${data.id}`)
     }
     return (
         <>
