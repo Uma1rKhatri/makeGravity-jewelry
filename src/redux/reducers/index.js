@@ -13,6 +13,7 @@ import collectionAdd from "./collection/collection-add-reducer";
 import collectionGet from "./collection/collection-get-reducer";
 import collectionEdit from "./collection/collection-edit-reducer";
 import auctionItemGet from "./auction item/auction-item-get-reducer";
+import auctionItemAdd from "./auction item/auction-item-add-reducer";
 
 export default combineReducers({
   login,
@@ -28,5 +29,7 @@ export default combineReducers({
   collectionAdd,
   collectionGet,
   collectionEdit,
-  auctionItemGet
+  auctionItemGet,
+  auctionItemAdd
+
 });

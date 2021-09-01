@@ -69,11 +69,11 @@ const AddDetail = ({}) => {
         setItems([...items, newName || `New item ${index++}`])
         setName('')
     };
-    function handleChange(value, fieldIndex) {
-        console.log("value", value, fieldIndex)
-        console.log("list", picker[fieldIndex].data_type_desc)
-        if (picker[fieldIndex].data_type_desc === "pick list") {
-            dispatch(pickListGet(picker[fieldIndex].ddl_id)).then((result) => {
+    function handleChange(value, fieldIndex, options) {
+        console.log("value", value, fieldIndex, options.key)
+        console.log("list", picker)
+        if (picker[options.key].data_type_desc === "pick list") {
+            dispatch(pickListGet(picker[options.key].ddl_id)).then((result) => {
 
                 if (result.type === PICKLIST_GET_SUCCESS) {
                     console.log("result", result.response.data.data)
@@ -84,7 +84,7 @@ const AddDetail = ({}) => {
             })
         }
         let temp = pickList;
-        temp[fieldIndex] = picker[fieldIndex].data_type_desc;
+        temp[fieldIndex] = picker[options.key].data_type_desc;
         setPickList(prev => [...prev]);
 
         console.log(`selected ${value}`);
@@ -351,7 +351,7 @@ const AddDetail = ({}) => {
 
                                                 >
 
-                                                    <Select onChange={(e) => handleChange(e, name)}>
+                                                    <Select onChange={(e, options) => handleChange(e, name, options)}>
                                                         {
                                                             picker && picker.length && picker.map((val, index) => {
                                                                 return <Option value={val.id} key={index} >{val.component_detail_nm}</Option>
