@@ -28,10 +28,10 @@ export const collectionGet = () => dispatch => {
         });
 };
 
-export const collectionAdd = (data, id) => dispatch => {
+export const collectionAdd = (data) => dispatch => {
     dispatch({ type: COLLECTION_ADD_REQUEST });
     let form = new FormData();
-    form.append("auction_id", id);
+    // form.append("auction_id", id);
     form.append("collection_name", data.collection_name);
     form.append("collection_description", data.collection_description);
     form.append("hide", data.hide);

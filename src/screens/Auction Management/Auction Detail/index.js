@@ -16,9 +16,14 @@ const AuctionDetail = () => {
     // const [record, setRecord] = useState({})
     // const [lot, setLot] = useState();
 
-    const breadCrumpRouting = () => {
-        console.log("click")
-        history.push('/auction-management')
+    const breadCrumpRouting = (val) => {
+        console.log("click", val)
+        let id = location.pathname.split("/")
+        console.log("click", id[3])
+        if (val === "Items")
+            history.push(`/auction-item/${id[3]}`)
+        else
+            history.push('/auction-management')
     }
 
     useEffect(() => {
@@ -46,7 +51,8 @@ const AuctionDetail = () => {
 
                 <Content style={{ margin: "20px" }}>
                     <Breadcrumb>
-                        <Breadcrumb.Item onClick={breadCrumpRouting} >Auction Management</Breadcrumb.Item>
+                        <Breadcrumb.Item onClick={() => breadCrumpRouting('Auction Management')} >Auction Management</Breadcrumb.Item>
+                        <Breadcrumb.Item onClick={() => breadCrumpRouting('Items')} >Items</Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Detail
                         </Breadcrumb.Item>
@@ -58,10 +64,10 @@ const AuctionDetail = () => {
                                 <Detail data={record} lot={handleLot} />
                             </Col> */}
 
-                           
+
 
                             <Col className="gr-mb-2">
-                                <AddDetail span={24}  />
+                                <AddDetail span={24} />
 
                             </Col>
 

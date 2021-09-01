@@ -87,7 +87,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
                             }}
                         />
                     </Tooltip>
-                    <Tooltip title="Detail">
+                    <Tooltip title="Items">
                         <FundProjectionScreenOutlined
                             className="actionTooltip"
                             onClick={() => handleDetail(record)}
@@ -98,7 +98,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
                         />
                     </Tooltip>
 
-                    <Tooltip title="Collection">
+                    {/* <Tooltip title="Collection">
                         <MoneyCollectOutlined
                             className="actionTooltip"
                             onClick={() => handleCollection(record)}
@@ -107,7 +107,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
                                 marginRight: 10,
                             }}
                         />
-                    </Tooltip>
+                    </Tooltip> */}
 
 
                 </div>)
@@ -123,7 +123,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
         window.open(link)
     };
     const handleDetail = (data) => {
-        history.push(`auction-detail/${data.id}`)
+        history.push(`auction-item/${data.id}`)
     }
     const handleCollection = (data) => {
         history.push(`auction-collection/${data.id}`)

@@ -52,12 +52,7 @@ const AuctionCollection = () => {
         })
     }
     const handleSubmit = (data) => {
-        let id = location.pathname.split("/");
-        console.log("data...", data)
-
-
-        //     console.log("type", type)
-        dispatch(collectionAdd(data, id[2])).then((result) => {
+        dispatch(collectionAdd(data)).then((result) => {
             if (result.type === COLLECTION_ADD_SUCCESS) {
                 console.log("result", result.response)
                 fetchCollection()

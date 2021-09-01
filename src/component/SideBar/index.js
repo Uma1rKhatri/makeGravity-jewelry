@@ -78,14 +78,14 @@ const AppSidebar = ({ props, test }) => {
               <span>Auction Managment</span>
             </Link>
           </Menu.Item>
-          {/* <Menu.Item
+          <Menu.Item
             key="auction-collection"
             icon={<MoneyCollectOutlined />}
           >
             <Link to={`/auction-collection`} className="route-link">
               <span>Auction Collection</span>
             </Link>
-          </Menu.Item> */}
+          </Menu.Item>
           {/* </SubMenu> */}
 
         </Menu>
