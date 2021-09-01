@@ -4,14 +4,17 @@ import moment from "moment";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import './detail.css';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet } from '../../../redux/actions/jewelery-action';
+import {auctionIdGet} from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR } from '../../../constant/redux-type'
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [1]
-const AddDetail = ({ }) => {
+const AddDetail = ({}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const location = useLocation()
     const dateFormat = 'YYYY/MM/DD';
     const { Option } = Select;
     const [items, setItems] = useState([])
@@ -20,9 +23,30 @@ const AddDetail = ({ }) => {
     const [jewelery, setJewelery] = useState([])
     const [picker, setPicker] = useState([])
 
+    const fetchAuction = (id) => {
+        dispatch(auctionIdGet(id)).then((result) => {
+            if (result.type === AUCTION_GET_ID_SUCCESS) {
+               
+                const {auction_name, source} = result.response.data.data
+                console.log("result",auction_name )
+                form.setFieldsValue({
+                    source:source,
+                    auction_name:auction_name
 
+                })
+            } else if (result.type === AUCTION_GET_ID_ERROR) {
+                form.setFieldsValue({
+                    source:null,
+                    auction_name:null
+
+                })
+            }
+        })
+    }
 
     useEffect(() => {
+           let uid = location.pathname.split("/");
+         fetchAuction(uid[3])
         form.setFields([{ name: "auction", value: arr }]);
         dispatch(jewelryGet()).then((result) => {
 
@@ -174,7 +198,7 @@ const AddDetail = ({ }) => {
                             wrapperCol={{ span: 23 }}
 
                         >
-                            <Input placeholder="mysite" className="inp" />
+                            <Input placeholder="Item Link" className="inp" />
                         </Form.Item>
                     </Col>
                     <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
