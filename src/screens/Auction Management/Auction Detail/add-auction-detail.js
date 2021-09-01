@@ -65,7 +65,8 @@ const AddDetail = ({}) => {
     };
 
     const addItem = () => {
-        console.log('addItem');
+        console.log("items")
+        console.log('addItem', newName);
         setItems([...items, newName || `New item ${index++}`])
         setName('')
     };
@@ -344,7 +345,7 @@ const AddDetail = ({}) => {
 
                                                 <Form.Item
                                                     label="Component"
-                                                    //  name={`Pick${name + 1}`}
+                                                   // name={`Pick${name + 1}`}
                                                     {...restField} key={key}
                                                     labelCol={{ span: 24 }}
                                                     wrapperCol={{ span: 24 }}
@@ -386,12 +387,14 @@ const AddDetail = ({}) => {
                                                                                 style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                                                                                 onClick={addItem}
                                                                             >
+                                                                            {console.log("key, name, fieldKey, ...restField ",key, name, fieldKey )}
                                                                                 <PlusOutlined /> Add item
                                                                             </a>
                                                                         </div>
                                                                     </div>
                                                                 )}
                                                             >
+  
                                                                 {items && items.length && items.map(item => (
 
                                                                     <Option key={item.id}>{item.list_member_txt}</Option>
