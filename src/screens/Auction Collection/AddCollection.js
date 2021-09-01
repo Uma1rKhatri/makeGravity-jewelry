@@ -158,6 +158,7 @@ const AuctionCollectionAddComponent = ({ collection, edit, editClose, record, co
     useEffect(() => {
         setIsModalVisible(edit);
         if (edit) {
+            console.log("recordrecord", record)
             form.setFieldsValue({
                 collection_name: record.collection_name,
                 notes_text: record.notes_text,

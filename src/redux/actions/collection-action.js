@@ -75,7 +75,7 @@ export const collectionEdit = (data) => dispatch => {
 
     return axios({
         method: "PATCH",
-        url: `${baseURL}auction/update/${data.id}`,
+        url: `${baseURL}auction-collection/update/${data.id}`,
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
