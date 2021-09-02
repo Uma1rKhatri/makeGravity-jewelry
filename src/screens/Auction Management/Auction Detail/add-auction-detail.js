@@ -423,8 +423,8 @@ const AddDetail = ({ }) => {
                                                                                     label={val.component_detail_nm}
 
 
-                                                                                    labelCol={{ span: 12 }}
-                                                                                    wrapperCol={{ span: 12 }}
+                                                                                    labelCol={{ span: 4 }}
+                                                                                wrapperCol={{ span: 16 }}
 
                                                                                 >
                                                                                     <InputNumber min={0} placeholder="0" />
@@ -432,8 +432,8 @@ const AddDetail = ({ }) => {
 
                                                                                     <Form.Item
                                                                                         label={val.component_detail_nm}
-                                                                                        labelCol={{ span: 24 }}
-                                                                                        wrapperCol={{ span: 24 }}
+                                                                                        labelCol={{ span: 4 }}
+                                                                                wrapperCol={{ span: 16 }}
 
                                                                                     >
                                                                                         <Input placeholder="Text" className="inp" />
