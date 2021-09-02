@@ -124,7 +124,7 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                 auction(data)
                 console.log("data", data)
             } else {
-                data.id = record.id
+                data.auction_id = record.auction_id
                 console.log("data", data)
                 setCheck(false)
                 auctionEdit(data)
@@ -223,11 +223,26 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                                     </Form.Item>
                                 </Col>
                                 <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+
+
+
+<Form.Item
+    label="Auction Id"
+    name="auction_id"
+
+    labelCol={{ span: 24 }}
+    wrapperCol={{ span: 24 }}
+    rules={[{ required: true, message: "Please input acution Id!" }]}
+>
+    <Input placeholder="source" />
+</Form.Item>
+</Col>
+                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
                                     <Form.Item
                                         label="Category"
                                         name="category"
                                         labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 24 }}
+                                        wrapperCol={{ span: 23 }}
                                         rules={[{ required: true, message: "Please input category!" }]}
                                     >
                                         <Input placeholder="Category" className="inp" disabled={edit} />
@@ -239,13 +254,13 @@ const AuctionAddComponent = ({ auction, edit, editClose, record, auctionEdit }) 
                                         name="auction_name"
 
                                         labelCol={{ span: 24 }}
-                                        wrapperCol={{ span: 23 }}
+                                        wrapperCol={{ span: 24 }}
                                         rules={[{ required: true, message: "Please input auction name!" }]}
                                     >
                                         <Input placeholder="Auction Name" className="inp" />
                                     </Form.Item>
                                 </Col>
-                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+                                <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                                     <Form.Item
                                         label="Auction URL"
                                         name="auction_url"

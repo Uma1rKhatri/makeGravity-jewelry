@@ -6,12 +6,12 @@ import './detail.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet } from '../../../redux/actions/jewelery-action';
-import {auctionIdGet} from "../../../redux/actions/auction-action"
+import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
 import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [1]
-const AddDetail = ({}) => {
+const AddDetail = ({ }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const location = useLocation()
@@ -26,18 +26,18 @@ const AddDetail = ({}) => {
     const fetchAuction = (id) => {
         dispatch(auctionIdGet(id)).then((result) => {
             if (result.type === AUCTION_GET_ID_SUCCESS) {
-               
-                const {auction_name, source} = result.response.data.data
-                console.log("result",auction_name )
+
+                const { auction_name, source } = result.response.data.data
+                console.log("result", auction_name)
                 form.setFieldsValue({
-                    source:source,
-                    auction_name:auction_name
+                    source: source,
+                    auction_name: auction_name
 
                 })
             } else if (result.type === AUCTION_GET_ID_ERROR) {
                 form.setFieldsValue({
-                    source:null,
-                    auction_name:null
+                    source: null,
+                    auction_name: null
 
                 })
             }
@@ -45,8 +45,8 @@ const AddDetail = ({}) => {
     }
 
     useEffect(() => {
-           let uid = location.pathname.split("/");
-         fetchAuction(uid[3])
+        let uid = location.pathname.split("/");
+        fetchAuction(uid[3])
         form.setFields([{ name: "auction", value: arr }]);
         dispatch(jewelryGet()).then((result) => {
 
@@ -342,10 +342,26 @@ const AddDetail = ({}) => {
                                                 <div style={{ float: 'right' }} >
                                                     <MinusCircleOutlined onClick={() => { remove(name); removeNewField(name); }} style={{ fontSize: '120%' }} />
                                                 </div>
+                                                <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
+                                                    <Form.Item
+                                                        label="Component"
+                                                        name={[name, "component"]}
 
+                                                        labelCol={{ span: 24 }}
+                                                        wrapperCol={{ span: 23 }}
+
+                                                    >
+                                                        <Select onChange={handleChangeValue}>
+                                                            {jewelery && jewelery.length && jewelery.map((val, index) => {
+                                                                return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
+                                                            })}
+
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
                                                 <Form.Item
-                                                    label="Component"
-                                                   // name={`Pick${name + 1}`}
+                                                    label="Component Detail"
+                                                    name={[name, "componentDetail"]}
                                                     {...restField} key={key}
                                                     labelCol={{ span: 24 }}
                                                     wrapperCol={{ span: 24 }}
@@ -387,14 +403,14 @@ const AddDetail = ({}) => {
                                                                                 style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
                                                                                 onClick={addItem}
                                                                             >
-                                                                            {console.log("key, name, fieldKey, ...restField ",key, name, fieldKey )}
+                                                                                {console.log("key, name, fieldKey, ...restField ", key, name, fieldKey)}
                                                                                 <PlusOutlined /> Add item
                                                                             </a>
                                                                         </div>
                                                                     </div>
                                                                 )}
                                                             >
-  
+
                                                                 {items && items.length && items.map(item => (
 
                                                                     <Option key={item.id}>{item.list_member_txt}</Option>

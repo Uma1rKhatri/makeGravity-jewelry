@@ -32,6 +32,7 @@ export const auctionAdd = (data) => dispatch => {
   dispatch({ type: AUCTION_ADD_REQUEST });
   let form = new FormData();
   form.append("source", data.source);
+  form.append("auction_id", data.auction_id);
   form.append("auction_name", data.auction_name);
   form.append("auction_url", data.auction_url);
   form.append("category", data.category);
@@ -52,6 +53,7 @@ export const auctionAdd = (data) => dispatch => {
     data: form
   })
     .then(response => {
+      
       return dispatch({ type: AUCTION_ADD_SUCCESS, response: response });
     })
     .catch(error => {
@@ -76,7 +78,7 @@ export const auctionEdit = (data) => dispatch => {
 
   return axios({
     method: "PATCH",
-    url: `${baseURL}auction/update/${data.id}`,
+    url: `${baseURL}auction/update/${data.auction_id}`,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -84,6 +86,7 @@ export const auctionEdit = (data) => dispatch => {
     data: form
   })
     .then(response => {
+      console.log("response", response)
       return dispatch({ type: AUCTION_EDIT_SUCCESS, response: response });
     })
     .catch(error => {

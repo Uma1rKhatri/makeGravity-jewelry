@@ -123,7 +123,7 @@ const TableComponent = ({ dataSource, loading, record }) => {
         window.open(link)
     };
     const handleDetail = (data) => {
-        history.push(`auction-item/${data.id}`)
+        history.push(`auction-item/${data.auction_id}`)
     }
     const handleCollection = (data) => {
         history.push(`auction-collection/${data.id}`)
