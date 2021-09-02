@@ -66,6 +66,7 @@ export const jewelryGet = () => dispatch => {
       }
     })
       .then(response => {
+        console.log("response 69", response)
         return dispatch({ type: PICKLIST_GET_SUCCESS, response: response });
       })
       .catch(error => {

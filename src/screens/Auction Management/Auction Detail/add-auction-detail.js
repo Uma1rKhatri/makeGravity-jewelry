@@ -71,23 +71,24 @@ const AddDetail = ({ }) => {
         setItems([...items, newName || `New item ${index++}`])
         setName('')
     };
-    function handleChange(value, fieldIndex, options) {
-        console.log("value", value, fieldIndex, options.key)
-        console.log("list", picker)
-        if (picker[options.key].data_type_desc === "pick list") {
-            dispatch(pickListGet(picker[options.key].ddl_id)).then((result) => {
+    function handleChange(e ,value, fieldIndex) {
+        console.log("value", value, fieldIndex)
+ 
+        if (value.data_type_desc === "pick list") {
+            dispatch(pickListGet(value.ddl_id)).then((result) => {
 
                 if (result.type === PICKLIST_GET_SUCCESS) {
-                    console.log("result", result.response.data.data)
+                    console.log("result 81", result.response.data.data)
                     setItems(result.response.data.data)
                 } else if (result.type === PICKLIST_GET_ERROR) {
                     setItems([])
                 }
             })
         }
-        let temp = pickList;
-        temp[fieldIndex] = picker[options.key].data_type_desc;
-        setPickList(prev => [...prev]);
+        // let temp = pickList;
+        // console.log("list", pickList)
+        // temp[fieldIndex] = picker[fieldIndex].data_type_desc;
+        // setPickList(prev => [...prev]);
 
         console.log(`selected ${value}`);
     }
@@ -140,7 +141,11 @@ const AddDetail = ({ }) => {
         arr.push(arr.length + 1)
     }
 
-    console.log("jew", jewelery)
+    // console.log("jew", jewelery)
+    // const handleFocus = () => {
+    //     console.log("loadData")
+    // }
+    
     return (
         <React.Fragment>
             <Form
@@ -392,8 +397,10 @@ const AddDetail = ({ }) => {
                                                                                 wrapperCol={{ span: 16 }}
 
                                                                             >
+                                                                      
 
                                                                                 <Select
+                                                                                onFocus={(e) => handleChange(e, val ,name)}
                                                                                     placeholder="Select Pick List"
                                                                                     dropdownRender={menu => (
                                                                                         <div>
@@ -439,7 +446,7 @@ const AddDetail = ({ }) => {
                                                                                         <Input placeholder="Text" className="inp" />
                                                                                     </Form.Item>}
 
-                                                                        {console.log("val", val)}
+                                                                        {/* {console.log("val", val)} */}
 
                                                                     </>
 
