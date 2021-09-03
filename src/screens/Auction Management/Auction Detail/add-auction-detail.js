@@ -5,10 +5,10 @@ import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import './detail.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom'
-import { jewelryGet, jeweleryAttributeGet, pickListGet } from '../../../redux/actions/jewelery-action';
+import { jewelryGet, jeweleryAttributeGet, pickListGet,jeweleryDdl } from '../../../redux/actions/jewelery-action';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR } from '../../../constant/redux-type'
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [{
     component: null
@@ -51,6 +51,10 @@ const AddDetail = ({ }) => {
         let uid = location.pathname.split("/");
         fetchAuction(uid[3])
         form.setFields([{ name: "auction", value: arr }]);
+        fetchJew()
+
+    }, [])
+    const fetchJew = () => {
         dispatch(jewelryGet()).then((result) => {
 
             if (result.type === JEWELERY_GET_SUCCESS) {
@@ -60,21 +64,48 @@ const AddDetail = ({ }) => {
                 setJewelery([])
             }
         })
-
-    }, [])
+    }
     const onNameChange = event => {
         console.log("event", event.target.value)
         setName(event.target.value)
     };
 
-    const addItem = () => {
-        console.log("items")
-        console.log('addItem', newName);
-        setItems([...items, newName || `New item ${index++}`])
-        setName('')
+    const addItem = (e, val, menu) => {
+        console.log("Items", items)
+        if(newName.length > 0){
+            let data = {
+                "ddl_id" : val.ddl_id,
+                "list_member_txt" : newName,
+                "pick_list_position" : menu?.props?.flattenOptions?.length + 1,
+                "value_1" : "",
+                "value_2" : "",
+                "value_3" : "",
+                "dependant_pick_list" : ""
+            }
+            console.log("data", data)
+            dispatch(jeweleryDdl(data)).then((result) => {
+
+                if (result.type === JEWELERY_DDL_ADD_SUCCESS) {
+                    console.log("result 81", result.response.data.data)
+                   // setItems(result.response.data.data)
+                    setItems([...items, result.response.data.data])
+                   setName('')
+                   // setName('')
+                } else if (result.type === JEWELERY_DDL_ADD_ERROR) {
+                    setName('')
+                }
+            })
+            // setName('')
+        }
+        
+//         console.log("items", val)
+//   console.log('addItem', newName);
+//   console.log("menu", menu?.props?.flattenOptions?.length + 1)
+        // setItems([...items, newName || `New item ${index++}`])
+        // setName('')
     };
     function handleChange(e, value, fieldIndex) {
-        console.log("value", value, fieldIndex)
+        console.log("value 187", value, fieldIndex)
 
         if (value.data_type_desc === "pick list") {
             dispatch(pickListGet(value.ddl_id)).then((result) => {
@@ -114,10 +145,7 @@ const AddDetail = ({ }) => {
         const {auction} = fields
         Object.assign(auction[name], {component: op.value})
         form.setFieldsValue({auction})
-      console.log("form", auction)
-    //    form.setFieldsValue({
-    //        auction[0] : {component: null}
-    //    })
+     
       
         dispatch(jeweleryAttributeGet(val)).then((result) => {
 
@@ -125,17 +153,19 @@ const AddDetail = ({ }) => {
                 dum[name] = result.response.data.data;
                 console.log("result", result.response.data.data)
                 setPicker(result.response.data.data)
+              //setJewelery(jewelery.filter(item => item.id !== val));
                 setItems([])
             } else if (result.type === JEWELERY_ATTRIBUTE_GET_ERROR) {
                 setPicker([])
             }
         })
+      //  fetchJew()
+      //  console.log(" setJewelery([])", jewelery)
+
+        //
     }
 
     const removeNewField = (fieldIndex) => {
-
-        console.log("pickList", pickList);
-        console.log("fieldIndex", fieldIndex)
         if (Array.isArray(arr) && arr.length > 1) {
 
             arr.splice(fieldIndex, 1);
@@ -157,7 +187,9 @@ const AddDetail = ({ }) => {
         })
     }
 
-  
+const Formfields = form.getFieldsValue()
+ const {auction} = Formfields
+    {console.log("fields", auction)}
     return (
         <React.Fragment>
             <Form
@@ -353,7 +385,7 @@ const AddDetail = ({ }) => {
                         <Form.List name="auction" >
                             {(fields, { add, remove }, { errors }) => (
                                 <>
-                                    {console.log("fields", fields)}
+                               
 
                                     {
                                         fields.map(({ key, name, fieldKey, ...restField }) => (
@@ -371,9 +403,15 @@ const AddDetail = ({ }) => {
                                                         wrapperCol={{ span: 23 }}
 
                                                     >
+                                                    
                                                         <Select onChange={(e, options) => handleChangeValue(e, name, options)}>
                                                             {jewelery && jewelery.length && jewelery.map((val, index) => {
-                                                                return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
+                                                                return (
+                                                                
+                                                                   
+                                                                    <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
+                                                                )
+                                                                
                                                             })}
 
                                                         </Select>
@@ -400,6 +438,7 @@ const AddDetail = ({ }) => {
                                                             dum[name] && dum[name].length > 0 && dum[name].map((val, index) => {
                                                                 return (
                                                                     <>
+
                                                                         {
                                                                             val.data_type_desc === "pick list" ? 
                                                                             <Form.Item
@@ -416,6 +455,7 @@ const AddDetail = ({ }) => {
                                                                                     onFocus={(e) => handleChange(e, val, name)}
                                                                                     placeholder="Select Pick List"
                                                                                     dropdownRender={menu => (
+                                                                                    
                                                                                         <div>
                                                                                             {menu}
                                                                                             <Divider style={{ margin: '4px 0' }} />
@@ -423,7 +463,7 @@ const AddDetail = ({ }) => {
                                                                                                 <Input style={{ flex: 'auto' }} value={newName} onChange={(e) => onNameChange(e)} />
                                                                                                 <a
                                                                                                     style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
-                                                                                                    onClick={addItem}
+                                                                                                    onClick={(e)=> addItem(e ,val, menu)}
                                                                                                 >
                                                                                                     {console.log("key, name, fieldKey, ...restField ", key, name, fieldKey)}
                                                                                                     <PlusOutlined /> Add item
@@ -435,7 +475,7 @@ const AddDetail = ({ }) => {
 
                                                                                     {items && items.length && items.map(item => (
 
-                                                                                        <Option key={item.id}>{item.list_member_txt}</Option>
+                                                                                        <Option key={item.list_member_txt}>{item.list_member_txt}</Option>
                                                                                     ))}
                                                                                 </Select>
                                                                             </Form.Item>
