@@ -10,7 +10,9 @@ import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
 import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR } from '../../../constant/redux-type'
 let index = 0;
-let arr = [1];
+let arr = [{
+    component: null
+}];
 let dum = []
 const AddDetail = ({ }) => {
     const [form] = Form.useForm();
@@ -71,9 +73,9 @@ const AddDetail = ({ }) => {
         setItems([...items, newName || `New item ${index++}`])
         setName('')
     };
-    function handleChange(e ,value, fieldIndex) {
+    function handleChange(e, value, fieldIndex) {
         console.log("value", value, fieldIndex)
- 
+
         if (value.data_type_desc === "pick list") {
             dispatch(pickListGet(value.ddl_id)).then((result) => {
 
@@ -107,13 +109,23 @@ const AddDetail = ({ }) => {
     };
 
     const handleChangeValue = (val, name, op) => {
-        console.log(`val = ${val}`, name, op);
+        console.log(`val 112= ${val}`, name, op);
+        const fields = form.getFieldsValue()
+        const {auction} = fields
+        Object.assign(auction[name], {component: op.value})
+        form.setFieldsValue({auction})
+      console.log("form", auction)
+    //    form.setFieldsValue({
+    //        auction[0] : {component: null}
+    //    })
+      
         dispatch(jeweleryAttributeGet(val)).then((result) => {
 
             if (result.type === JEWELERY_ATTRIBUTE_GET_SUCCESS) {
                 dum[name] = result.response.data.data;
                 console.log("result", result.response.data.data)
                 setPicker(result.response.data.data)
+                setItems([])
             } else if (result.type === JEWELERY_ATTRIBUTE_GET_ERROR) {
                 setPicker([])
             }
@@ -121,31 +133,31 @@ const AddDetail = ({ }) => {
     }
 
     const removeNewField = (fieldIndex) => {
-        console.log("arr", arr)
+
+        console.log("pickList", pickList);
+        console.log("fieldIndex", fieldIndex)
         if (Array.isArray(arr) && arr.length > 1) {
 
             arr.splice(fieldIndex, 1);
+        }else {
+            arr[0] = {
+                component: null
+            }
+            form.setFields([{ name: "auction", value: arr }]);
         }
-        if (Array.isArray(pickList) && pickList.length > 0) {
-            pickList.splice(fieldIndex, 1);
-        }
-        // setFlag(!flag)
-        // setDisabe(false);
-        // setSelectTemp(false)
-        // console.log("arr form 172", arr)
-        form.setFields([{ name: "auction", value: arr }]);
+
+        dum.splice(fieldIndex, 1);
+     
 
     }
 
     const newMethod = () => {
-        arr.push(arr.length + 1)
+        arr.push({
+            component: null
+        })
     }
 
-    // console.log("jew", jewelery)
-    // const handleFocus = () => {
-    //     console.log("loadData")
-    // }
-    
+  
     return (
         <React.Fragment>
             <Form
@@ -328,7 +340,7 @@ const AddDetail = ({ }) => {
                             wrapperCol={{ span: 23 }}
 
                         >
-                        <Input placeholder="Jewelry Classification" className="inp" />
+                            <Input placeholder="Jewelry Classification" className="inp" />
                             {/* <Select onChange={handleChangeValue}>
                                 {jewelery && jewelery.length && jewelery.map((val, index) => {
                                     return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
@@ -389,18 +401,19 @@ const AddDetail = ({ }) => {
                                                                 return (
                                                                     <>
                                                                         {
-                                                                            val.data_type_desc === "pick list" ? <Form.Item
+                                                                            val.data_type_desc === "pick list" ? 
+                                                                            <Form.Item
                                                                                 label={val.component_detail_nm}
-
+                                                                                name={[name, val.component_detail_nm]}
 
                                                                                 labelCol={{ span: 4 }}
                                                                                 wrapperCol={{ span: 16 }}
 
                                                                             >
-                                                                      
+
 
                                                                                 <Select
-                                                                                onFocus={(e) => handleChange(e, val ,name)}
+                                                                                    onFocus={(e) => handleChange(e, val, name)}
                                                                                     placeholder="Select Pick List"
                                                                                     dropdownRender={menu => (
                                                                                         <div>
@@ -429,9 +442,9 @@ const AddDetail = ({ }) => {
                                                                                 : val.data_type_desc === "number" ? <Form.Item
                                                                                     label={val.component_detail_nm}
 
-
+                                                                                    name={[name, val.component_detail_nm]}
                                                                                     labelCol={{ span: 4 }}
-                                                                                wrapperCol={{ span: 16 }}
+                                                                                    wrapperCol={{ span: 16 }}
 
                                                                                 >
                                                                                     <InputNumber min={0} placeholder="0" />
@@ -439,8 +452,9 @@ const AddDetail = ({ }) => {
 
                                                                                     <Form.Item
                                                                                         label={val.component_detail_nm}
+                                                                                        name={[name, val.component_detail_nm]}
                                                                                         labelCol={{ span: 4 }}
-                                                                                wrapperCol={{ span: 16 }}
+                                                                                        wrapperCol={{ span: 16 }}
 
                                                                                     >
                                                                                         <Input placeholder="Text" className="inp" />
