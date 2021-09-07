@@ -11,7 +11,7 @@ import DemoCarousel from './slider';
 import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR } from '../../../constant/redux-type'
 let index = 0;
 let arr = [{
-    component: null
+    jewelry_id: null
 }];
 let dum = []
 const AddDetail = ({ }) => {
@@ -31,18 +31,19 @@ const AddDetail = ({ }) => {
             if (result.type === AUCTION_GET_ID_SUCCESS) {
 
                 const { auction_name, source } = result.response.data.data
-                console.log("result", auction_name)
+                console.log("result fetchAuction", auction_name)
                 form.setFieldsValue({
                     source: source,
                     auction_name: auction_name
 
                 })
             } else if (result.type === AUCTION_GET_ID_ERROR) {
-                form.setFieldsValue({
-                    source: null,
-                    auction_name: null
 
-                })
+                // form.setFieldsValue({
+                //     source: null,
+                //     auction_name: null
+
+                // })
             }
         })
     }
@@ -141,10 +142,10 @@ const AddDetail = ({ }) => {
 
     const handleChangeValue = (val, name, op) => {
         console.log(`val 112= ${val}`, name, op);
-        const fields = form.getFieldsValue()
-        const { auction } = fields
-        Object.assign(auction[name], { component: op.value })
-        form.setFieldsValue({ auction })
+        let { auction_jewelry } = form.getFieldsValue()
+        Object.assign(auction_jewelry[name], { jewelry_id: op.value })
+        form.setFieldsValue({ auction_jewelry })
+        formValues['auction_jewelry'][name] = auction_jewelry;
 
 
         dispatch(jeweleryAttributeGet(val)).then((result) => {
@@ -152,11 +153,31 @@ const AddDetail = ({ }) => {
             if (result.type === JEWELERY_ATTRIBUTE_GET_SUCCESS) {
                 dum[name] = result.response.data.data;
                 console.log("result", result.response.data.data)
-                setPicker(result.response.data.data)
+                let finalResult = result.response.data.data.map((item) => {
+                    return {
+                        jewelry_attr_id: item.id,
+                        // jewelry_attribute: {
+                        //     component_detail_nm: item.component_detail_nm,
+                        //     data_type_desc: item.data_type_desc
+                        // },
+                        jewelry_id: op.value,
+                        ddl_id: item.ddl_id,
+                        auction_jewelry_attr_value: [
+                            { ddl_value: "" }
+                        ]
+                    }
+                })
+                console.log("finalResult result", finalResult)
+
+                Object.assign(auction_jewelry[name], { auction_jewelry_attribute: finalResult })
+                form.setFieldsValue({ auction_jewelry })
+                formValues['auction_jewelry'][name] = auction_jewelry;
+
+                // setPicker(result.response.data.data)
                 //setJewelery(jewelery.filter(item => item.id !== val));
                 setItems([])
             } else if (result.type === JEWELERY_ATTRIBUTE_GET_ERROR) {
-                setPicker([])
+                // setPicker([])
             }
         })
         //  fetchJew()
@@ -171,7 +192,7 @@ const AddDetail = ({ }) => {
             arr.splice(fieldIndex, 1);
         } else {
             arr[0] = {
-                component: null
+                jewelry_id: null
             }
             form.setFields([{ name: "auction", value: arr }]);
         }
@@ -182,16 +203,61 @@ const AddDetail = ({ }) => {
     }
 
     const newMethod = () => {
-        arr.push({
-            component: null
-        })
+        if (formValues['auction_jewelry'] && formValues['auction_jewelry'].length > 0) {
+            formValues['auction_jewelry'].push(
+                {
+                    jewelry_id: null
+                }
+            )
+        } else {
+            formValues['auction_jewelry'] = [{
+                jewelry_id: null
+            }]
+        }
+
+        // let { auction_jewelry } = form.getFieldsValue()
+        // Object.assign(auction_jewelry[name], { jewelry_id: null })
+        // form.setFieldsValue({auction_jewelry})
+        // arr.push()
     }
 
     const Formfields = form.getFieldsValue()
-    const { auction } = Formfields
-    { console.log("fields", auction) }
+    { console.log('umair Formfields', Formfields) }
+    const { auction_jewelry } = Formfields
+    { console.log("fields", auction_jewelry) }
+
+    let formValues = form.getFieldsValue()
+    // let formValues = {
+    //     source: "Sample source",
+    //     auction_name: "sample auction",
+    //     auction_jewelry:
+    //         [
+    //             {
+    //                 jewelry_id: 1,
+    //                 notes: '',
+    //                 auction_jewelry_attribute:
+    //                     [{
+    //                         jewelry_attr_id: '1234',
+    //                         jewelry_attribute: {
+    //                             component_detail_nm: "Gem type",
+    //                             data_type_desc: "number"
+    //                         },
+    //                         jewelry_id: 1,
+    //                         ddl_id: '',
+    //                         auction_jewelry_attr_value: [
+    //                             { ddl_value: "" }
+    //                         ]
+    //                     }]
+    //             },
+    //             {
+    //                 jewelry_id: 2,
+    //                 notes: '',
+    //             }
+    //         ]
+    // };
     return (
         <React.Fragment>
+            {console.log("form.getFieldsValue()", form.getFieldsValue())}
             <Form
                 scrollToFirstError
                 name="basic"
@@ -201,8 +267,6 @@ const AddDetail = ({ }) => {
             >
                 <Row>
                     <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
-
-
 
                         <Form.Item
                             label="Source"
@@ -221,7 +285,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Auction Name"
                             name="auction_name"
-                            rules={[{ required: true, message: "Please input auction name!" }]}
+                            // rules={[{ required: true, message: "Please input auction name!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -233,7 +297,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Auction Lot Number"
                             name="auction_lot_number"
-                            rules={[{ required: true, message: "Please input auction lot number!" }]}
+                            // rules={[{ required: true, message: "Please input auction lot number!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
 
@@ -245,13 +309,13 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Link to Item"
                             name="auction_lot_url"
-                            rules={[{ required: true, message: "Please input auction lot url!" },
-                            {
-                                pattern: new RegExp(
-                                    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-                                ),
-                                message: "Invalid URL string!",
-                            }]}
+                            // rules={[{ required: true, message: "Please input auction lot url!" },
+                            // {
+                            //     pattern: new RegExp(
+                            //         /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+                            //     ),
+                            //     message: "Invalid URL string!",
+                            // }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -295,10 +359,7 @@ const AddDetail = ({ }) => {
 
 
                         <Form.Item
-                            label="Item Name"
-                            name="item_name"
-                            rules={[{ required: true, message: "Please input item name!" }]}
-                            labelCol={{ span: 24 }}
+                            label="Item Name" number
                             wrapperCol={{ span: 23 }}
 
                         >
@@ -310,7 +371,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Price Realized"
                             name="price_realized"
-                            rules={[{ required: true, message: "Please input price realized!" }]}
+                            // rules={[{ required: true, message: "Please input price realized!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -351,7 +412,7 @@ const AddDetail = ({ }) => {
                             name="description"
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
-                            rules={[{ required: true, message: "Please input description!" }]}
+                        // rules={[{ required: true, message: "Please input description!" }]}
 
                         >
                             <Input.TextArea placeholder="Item Description" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
@@ -383,37 +444,31 @@ const AddDetail = ({ }) => {
                                 {jewelery && jewelery.length && jewelery.map((val, index) => {
                                     return <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
                                 })}
-
                             </Select> */}
                         </Form.Item>
                     </Col>
+
                     <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
-                        <Form.List name="auction" >
+                        <Form.List name="auction_jewelry" >
                             {(fields, { add, remove }, { errors }) => (
                                 <>
-
-
                                     {
-                                        fields.map(({ key, name, fieldKey, ...restField }) => (
-
-                                            <div key={key} className="add-component">
+                                        fields.map((field) => (
+                                            <div key={field.key} className="add-component">
                                                 <div style={{ float: 'right' }} >
-                                                    <MinusCircleOutlined onClick={() => { remove(name); removeNewField(name); }} style={{ fontSize: '120%' }} />
+                                                    <MinusCircleOutlined onClick={() => { remove(field.name); removeNewField(field.name); }} style={{ fontSize: '120%' }} />
                                                 </div>
                                                 <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
                                                     <Form.Item
                                                         label="Component"
-                                                        name={[name, "component"]}
+                                                        name={[field.name, "jewelry_id"]}
 
                                                         labelCol={{ span: 24 }}
                                                         wrapperCol={{ span: 23 }}
-
                                                     >
-
-                                                        <Select onChange={(e, options) => handleChangeValue(e, name, options)}>
+                                                        <Select onChange={(e, options) => handleChangeValue(e, field.name, options)}>
                                                             {jewelery && jewelery.length && jewelery.map((val, index) => {
                                                                 return (
-
 
                                                                     <Option value={val.id} key={val.id} >{val.jewelry_nm}</Option>
                                                                 )
@@ -423,42 +478,36 @@ const AddDetail = ({ }) => {
                                                         </Select>
                                                     </Form.Item>
                                                 </Col>
+                                                <Form.Item
+                                                    label="Component Detail"
+                                                    key={field.key}
+                                                    labelCol={{ span: 24 }}
+                                                    wrapperCol={{ span: 24 }}
 
-                                                {/* {
-                                                    picker && picker.length > 0 && <label>Component Detail <br /><br /> </label>
+                                                ></Form.Item>
 
-                                                } */}
-                                                {
-                                                    dum[name] && dum[name].length > 0 &&
+                                                <Form.List name={[field.name, "auction_jewelry_attribute"]} fieldKey={[field.fieldKey, "auction_jewelry_attribute"]}>
+                                                    {(attributeFields, { add, remove }, { errors }) => (
+                                                        <>
 
-                                                    <Form.Item
-                                                        label="Component Detail"
-                                                       // name={[name, "Component Detail"]}
-                                                        {...restField} key={key}
-                                                        labelCol={{ span: 24 }}
-                                                        wrapperCol={{ span: 24 }}
+                                                            {
+                                                                attributeFields.map((attributeField) => (
+                                                                    <div>
+                                                                        {console.log('running auction_jewelry_attribute', attributeField)}
+                                                                        {console.log('auction_jewelry auction_jewelry_attribute', dum)}
 
-                                                    >
-
-                                                        {
-                                                            dum[name] && dum[name].length > 0 && dum[name].map((val, index) => {
-                                                                return (
-                                                                    <>
-
+                                                                        {/* {console.log('auction_jewelry auction_jewelry_attribute', auction_jewelry ? auction_jewelry[field.name]['auction_jewelry_attribute'] ? auction_jewelry[field.name]['auction_jewelry_attribute'] : null : null)} */}
                                                                         {
-                                                                            val.data_type_desc === "pick list" ?
+                                                                            dum[field.name][attributeField.name] && dum[field.name][attributeField.name]['data_type_desc'] === "pick list" ?
                                                                                 <Form.Item
-                                                                                    label={val.component_detail_nm}
-                                                                                    name={[name, val.component_detail_nm]}
 
+                                                                                    label={dum[field.name][attributeField.name] ? dum[field.name][attributeField.name]['component_detail_nm'] : ""}
+                                                                                    name={[attributeField.name, "auction_jewelry_attr_value",0,'ddl_value']}
                                                                                     labelCol={{ span: 4 }}
                                                                                     wrapperCol={{ span: 16 }}
-
                                                                                 >
-
-
                                                                                     <Select
-                                                                                        onFocus={(e) => handleChange(e, val, name)}
+                                                                                        onFocus={(e) => handleChange(e, dum[field.name][attributeField.name], attributeField.name)}
                                                                                         placeholder="Select Pick List"
                                                                                         dropdownRender={menu => (
 
@@ -469,164 +518,69 @@ const AddDetail = ({ }) => {
                                                                                                     <Input style={{ flex: 'auto' }} value={newName} onChange={(e) => onNameChange(e)} />
                                                                                                     <a
                                                                                                         style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
-                                                                                                        onClick={(e) => addItem(e, val, menu)}
+                                                                                                        onClick={(e) => addItem(e, dum[field.name][attributeField.name], menu)}
                                                                                                     >
-                                                                                                        {console.log("key, name, fieldKey, ...restField ", key, name, fieldKey)}
+                                                                                                        {console.log("attributeField.name", attributeField.name)}
                                                                                                         <PlusOutlined /> Add item
                                                                                                     </a>
                                                                                                 </div>
                                                                                             </div>
                                                                                         )}
                                                                                     >
-
                                                                                         {items && items.length && items.map(item => (
-
                                                                                             <Option key={item.list_member_txt}>{item.list_member_txt}</Option>
                                                                                         ))}
                                                                                     </Select>
-                                                                                </Form.Item>
-                                                                                : val.data_type_desc === "number" ? <Form.Item
-                                                                                    label={val.component_detail_nm}
-
-                                                                                    name={[name, val.component_detail_nm]}
-                                                                                    labelCol={{ span: 4 }}
-                                                                                    wrapperCol={{ span: 16 }}
-
-                                                                                >
-                                                                                    <InputNumber min={0} placeholder="0" />
-                                                                                </Form.Item> :
-
+                                                                                </Form.Item> : dum[field.name][attributeField.name] && dum[field.name][attributeField.name]['data_type_desc'] === "number" ?
                                                                                     <Form.Item
-                                                                                        label={val.component_detail_nm}
-                                                                                        name={[name, val.component_detail_nm]}
+                                                                                        label={dum[field.name][attributeField.name] ? dum[field.name][attributeField.name]['component_detail_nm'] : ""}
+                                                                                        name={[attributeField.name, "auction_jewelry_attr_value",0,'ddl_value']}
                                                                                         labelCol={{ span: 4 }}
                                                                                         wrapperCol={{ span: 16 }}
 
                                                                                     >
+                                                                                        <InputNumber min={0} placeholder="0" />
+                                                                                    </Form.Item> :
+                                                                                    <Form.Item
+                                                                                        label={dum[field.name][attributeField.name] ? dum[field.name][attributeField.name]['component_detail_nm'] : ""}
+                                                                                        name={[attributeField.name, "auction_jewelry_attr_value",0,'ddl_value']}
+                                                                                        labelCol={{ span: 4 }}
+                                                                                        wrapperCol={{ span: 16 }}
+                                                                                    >
                                                                                         <Input placeholder="Text" className="inp" />
-                                                                                    </Form.Item>}
-
-                                                                        {/* {console.log("val", val)} */}
-
-                                                                    </>
+                                                                                    </Form.Item>
+                                                                        }
 
 
-                                                                )
-                                                            })
-                                                        }
-                                                        <Form.Item
-                                                            label="Note"
-                                                            name={[name, "note"]}
-                                                            labelCol={{ span: 24 }}
-                                                            wrapperCol={{ span: 24 }}
+                                                                    </div>
 
-                                                        >
-                                                            <Input.TextArea placeholder="Note" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
-                                                        </Form.Item>
-                                                    </Form.Item>
-                                                }
 
-                                                {/* <Form.Item
-                                                    label="Component Detail"
-                                                    name={[name, "componentDetail"]}
-                                                    {...restField} key={key}
+                                                                ))
+                                                            }
+                                                        </>
+                                                    )}
+                                                </Form.List>
+                                                <Form.Item
+                                                    label="Note"
+                                                    name={[field.name, "notes"]}
                                                     labelCol={{ span: 24 }}
                                                     wrapperCol={{ span: 24 }}
-
                                                 >
-
-                                                    <Select onChange={(e, options) => handleChange(e, name, options)}>
-                                                        {
-                                                            picker && picker.length && picker.map((val, index) => {
-                                                                return <Option value={val.id} key={index} >{val.component_detail_nm}</Option>
-                                                            })
-                                                        }
-
-                                                    </Select>
-                                                </Form.Item> */}
-
-
-                                                {/* {pickList[name] === "pick list" ?
-                                                    <>
-                                                        <Divider />
-                                                        <Form.Item
-                                                            label="DropDown"
-
-
-                                                            labelCol={{ span: 24 }}
-                                                            wrapperCol={{ span: 24 }}
-
-                                                        >
-
-                                                            <Select
-                                                                placeholder="Select Pick List"
-                                                                dropdownRender={menu => (
-                                                                    <div>
-                                                                        {menu}
-                                                                        <Divider style={{ margin: '4px 0' }} />
-                                                                        <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                                                                            <Input style={{ flex: 'auto' }} value={newName} onChange={(e) => onNameChange(e)} />
-                                                                            <a
-                                                                                style={{ flex: 'none', padding: '8px', display: 'block', cursor: 'pointer' }}
-                                                                                onClick={addItem}
-                                                                            >
-                                                                                {console.log("key, name, fieldKey, ...restField ", key, name, fieldKey)}
-                                                                                <PlusOutlined /> Add item
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                            >
-
-                                                                {items && items.length && items.map(item => (
-
-                                                                    <Option key={item.id}>{item.list_member_txt}</Option>
-                                                                ))}
-                                                            </Select>
-                                                        </Form.Item>
-                                                    </>
-                                                    :
-
-                                                    pickList[name] === "number" ?
-                                                        <>
-                                                            <Divider />
-                                                            <Form.Item
-                                                                label="Value"
-
-
-                                                                labelCol={{ span: 24 }}
-                                                                wrapperCol={{ span: 24 }}
-
-                                                            >
-                                                                <InputNumber min={0} placeholder="0" />
-                                                            </Form.Item></> :
-                                                        <>
-                                                            <Divider />
-
-                                                            <Form.Item
-                                                                label="Text"
-
-
-                                                                labelCol={{ span: 24 }}
-                                                                wrapperCol={{ span: 24 }}
-
-                                                            >
-                                                                <Input placeholder="Text" className="inp" />
-                                                            </Form.Item></>
-                                                } */}
+                                                    <Input.TextArea placeholder="Note" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
+                                                </Form.Item>
                                             </div>
+
+
                                         ))
                                     }
-                                    {/* {arr.length <= 2 ? */}
                                     <Form.Item className="mt-4">
                                         <Button onClick={() => { add(); newMethod() }} block icon={<PlusOutlined />} > Add Component </Button>
                                     </Form.Item>
-
-                                    {/* : null} */}
                                 </>
                             )}
                         </Form.List>
                     </Col>
+
 
                     <Col className="ant-col-md-4 ant-col-sm-4 ant-col-xs-12">
                         <Form.Item
