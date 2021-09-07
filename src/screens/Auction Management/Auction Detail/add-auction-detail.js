@@ -8,8 +8,8 @@ import { useLocation, useHistory } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet, jeweleryDdl } from '../../../redux/actions/jewelery-action';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR } from '../../../constant/redux-type'
-import { auctionItemAdd } from "../../../redux/actions/auction-item-action"
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR, AUCTION_ITEM_DETAILS_GET_SUCCESS, AUCTION_ITEM_DETAILS_GET_ERROR } from '../../../constant/redux-type'
+import { auctionItemAdd, auctionItemDetailsGet } from "../../../redux/actions/auction-item-action"
 let index = 0;
 let arr = [{
     jewelry_id: null,
@@ -54,10 +54,39 @@ const AddDetail = ({ }) => {
     }
 
     useEffect(() => {
+        const { state } = location;
+        // const { edit } = state;
         let uid = location.pathname.split("/");
-       // newMethod();
-        fetchAuction(uid[3])
-        form.setFields([{ name: "auction_jewelry", value: arr }]);
+        console.log("location 58", state, uid[5])
+        if (state?.edit === true) {
+            console.log("edit 62")
+            dispatch(auctionItemDetailsGet(uid[5])).then((result) => {
+
+                if (result.type === AUCTION_ITEM_DETAILS_GET_SUCCESS) {
+                    let formValues = form.getFieldsValue()
+                    console.log("result 66", result.response.data.data)
+                    let val = result.response.data.data;
+                    console.log("auction_jewelry", val)
+                    form.setFieldsValue({
+                        auction_lot_number: val.auction_lot_number,
+                        auction_name: val.auction_name,
+                        source: val.source
+                    })
+                    // form.setFields([{ 
+                    //     name: "auction_jewelry", value: formValues[auction_jewelry] }]
+                    //     );
+                    //setJewelery(result.response.data.data)
+                } else if (result.type === AUCTION_ITEM_DETAILS_GET_ERROR) {
+                    //setJewelery([])
+                }
+            })
+        } else {
+
+            // newMethod();
+            fetchAuction(uid[3])
+            form.setFields([{ name: "auction_jewelry", value: arr }]);
+        }
+
         fetchJew()
 
     }, [])
@@ -232,13 +261,13 @@ const AddDetail = ({ }) => {
 
         if (formValues['auction_jewelry'] && formValues['auction_jewelry'].length > 1) {
 
-           formValues['auction_jewelry'].splice(fieldIndex, 1);
+            formValues['auction_jewelry'].splice(fieldIndex, 1);
         } else {
             formValues['auction_jewelry'][0] = {
                 jewelry_id: null,
                 "auction_jewelrycol": "",
             }
-           form.setFields([{ name: "auction_jewelry", value:  formValues['auction_jewelry'] }]);
+            form.setFields([{ name: "auction_jewelry", value: formValues['auction_jewelry'] }]);
         }
 
         dum.splice(fieldIndex, 1);
@@ -301,6 +330,8 @@ const AddDetail = ({ }) => {
     //             }
     //         ]
     // };
+
+
     return (
         <React.Fragment>
             {console.log("form.getFieldsValue()", form.getFieldsValue())}

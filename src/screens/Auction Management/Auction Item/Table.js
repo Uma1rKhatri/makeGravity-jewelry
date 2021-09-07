@@ -110,8 +110,8 @@ const TableComponent = ({ dataSource, loading, record }) => {
     ];
 
     const handleEdit = (data) => {
-        console.log("data", data)
-       // record(data)
+        console.log("data 113", data)
+        record(data)
     }
     const openLink = (link) => {
         window.open(link)

@@ -6,6 +6,8 @@ import DemoCarousel from './slider';
 import AddDetail from './add-auction-detail';
 import { useDispatch, useSelector } from 'react-redux';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
+// import {auctionItemDetailsGet} from "../../../redux/actions/auction-item-action";
+// import
 
 const AuctionDetail = () => {
 
@@ -21,7 +23,7 @@ const AuctionDetail = () => {
         let id = location.pathname.split("/")
         console.log("click", id[3])
         if (val === "Items")
-            history.push(`/auction-item/${id[3]}`)
+      history.push(`/auction-item/${id[3]}`)
         else
             history.push('/auction-management')
     }

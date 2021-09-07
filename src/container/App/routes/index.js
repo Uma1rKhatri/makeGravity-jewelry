@@ -16,6 +16,7 @@ const RouteApp = ({ match }) => {
       <Route exact path={`/auction-management`} component={asyncComponent(() => import("../../../screens/Auction Management"))} />
       <Route exact path={`/auction-collection`} component={asyncComponent(() => import("../../../screens/Auction Collection"))} />
       <Route exact path={`/auction-item/:id`} component={asyncComponent(() => import("../../../screens/Auction Management/Auction Item"))} />
+      <Route exact path={`/auction-item/auction-detail/:id/edit/:uid`} component={asyncComponent(() => import("../../../screens/Auction Management/Auction Detail"))} />
      
     </Switch>
 

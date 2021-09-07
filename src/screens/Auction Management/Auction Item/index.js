@@ -4,8 +4,8 @@ import { Layout, Row, Col, message, Button, Breadcrumb } from 'antd'
 import TableComponent from "./Table";
 import { useDispatch, useSelector } from 'react-redux';
 //import AuctionCollectionAddComponent from './AddCollection';
-import { AUCTION_ITEM_GET_SUCCESS, AUCTION_ITEM_GET_ERROR } from '../../../constant/redux-type';
-import { auctionItemGet } from '../../../redux/actions/auction-item-action';
+import { AUCTION_ITEM_GET_SUCCESS, AUCTION_ITEM_GET_ERROR, AUCTION_ITEM_DETAILS_GET_SUCCESS, AUCTION_ITEM_DETAILS_GET_ERROR } from '../../../constant/redux-type';
+import { auctionItemGet, auctionItemDetailsGet } from '../../../redux/actions/auction-item-action';
 import { useLocation, useHistory } from 'react-router-dom'
 import "../list.css"
 const ItemsAuction = () => {
@@ -27,11 +27,16 @@ const ItemsAuction = () => {
     // const handleSearch = (val) => {
     //     console.log("val...", val)
     // }
-    // const handleEdit = (data) => {
-    //     console.log("66", data)
-    //     setEditRecord(data)
-    //     setEdit(true)
-    // }
+    const handleEdit = (data) => {
+        console.log("66", data.id)
+
+        history.push({
+            pathname: `auction-detail/${id}/edit/${data.id}`,
+            state: { edit: true },
+        })
+        // setEditRecord(data)
+        // setEdit(true)
+    }
     // const handleClose = (val) => {
     //     console.log("vla", val)
     //     setEdit(val)
@@ -63,7 +68,7 @@ const ItemsAuction = () => {
     // }
 
     const fetchAuctionItem = (id) => {
-       
+
         dispatch(auctionItemGet(id)).then((result) => {
             if (result.type === AUCTION_ITEM_GET_SUCCESS) {
                 console.log("result", result.response.data.data)
@@ -85,7 +90,11 @@ const ItemsAuction = () => {
     const handleClick = () => {
         // let id = location.pathname.split("/");
         // console.log("id", id[2])
-        history.push(`auction-detail/${id}`)
+        history.push({
+            pathname: `auction-detail/${id}`,
+            state: { edit: false },
+        })
+        // history.push(`auction-detail/${id}`, { edit: false })
     }
     return (
         <React.Fragment>
@@ -118,7 +127,8 @@ const ItemsAuction = () => {
                         <Col span={24}>
                             <TableComponent dataSource={dataSource}
                                 loading={dataState?.auctionItemGet?.loading}
-                            //  record={handleEdit}
+                                record={handleEdit}
+
                             />
                         </Col>
                     </Row>

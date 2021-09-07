@@ -69,6 +69,7 @@ export const auctionItemAdd = (data) => dispatch => {
       }
     })
       .then(response => {
+        console.log("response 72", response)
         return dispatch({ type: AUCTION_ITEM_DETAILS_GET_SUCCESS, response: response });
       })
       .catch(error => {
