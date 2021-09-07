@@ -4,7 +4,7 @@ import moment from "moment";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import './detail.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet, jeweleryDdl } from '../../../redux/actions/jewelery-action';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
@@ -19,7 +19,8 @@ let dum = []
 const AddDetail = ({ }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const location = useLocation()
+    const location = useLocation();
+    const history = useHistory();
     const dateFormat = 'YYYY/MM/DD';
     const { Option } = Select;
     const [items, setItems] = useState([])
@@ -166,6 +167,7 @@ const AddDetail = ({ }) => {
             dispatch(auctionItemAdd(values)).then((result) => {
                 if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
                     console.log("res success", result)
+                    history.push(`/auction-item/${uid[3]}`)
 
                 } else if (result.type === AUCTION_ITEM_ADD_ERROR) {
 

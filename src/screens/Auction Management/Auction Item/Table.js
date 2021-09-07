@@ -64,54 +64,54 @@ const TableComponent = ({ dataSource, loading, record }) => {
             key: 'estimate_high',
             width: 200,
         },
-        // {
-        //     title: 'Action',
-        //     dataIndex: 'action',
-        //     key: 'action',
-        //     width: 120,
-        //     render: (text, record) => (
-        //         <div>
-        //             <Tooltip title="Edit">
-        //                 <EditOutlined
-        //                     className="actionTooltip"
-        //                     onClick={() => handleEdit(record)}
-        //                     style={{
-        //                         color: "green",
-        //                         marginRight: 10,
-        //                     }}
-        //                 />
-        //             </Tooltip>
-        //             <Tooltip title="Detail">
-        //                 <FundProjectionScreenOutlined
-        //                     className="actionTooltip"
-        //                     onClick={() => handleDetail(record)}
-        //                     style={{
-        //                         color: "green",
-        //                         marginRight: 10,
-        //                     }}
-        //                 />
-        //             </Tooltip>
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            width: 120,
+            render: (text, record) => (
+                <div>
+                    <Tooltip title="Edit">
+                        <EditOutlined
+                            className="actionTooltip"
+                            onClick={() => handleEdit(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip>
+                    {/* <Tooltip title="Detail">
+                        <FundProjectionScreenOutlined
+                            className="actionTooltip"
+                            onClick={() => handleDetail(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip> */}
 
-        //             {/* <Tooltip title="Collection">
-        //                 <MoneyCollectOutlined
-        //                     className="actionTooltip"
-        //                     onClick={() => handleCollection(record)}
-        //                     style={{
-        //                         color: "green",
-        //                         marginRight: 10,
-        //                     }}
-        //                 />
-        //             </Tooltip> */}
+                    {/* <Tooltip title="Collection">
+                        <MoneyCollectOutlined
+                            className="actionTooltip"
+                            onClick={() => handleCollection(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip> */}
 
 
-        //         </div>)
+                </div>)
 
-        // },
+        },
     ];
 
     const handleEdit = (data) => {
         console.log("data", data)
-        record(data)
+       // record(data)
     }
     const openLink = (link) => {
         window.open(link)
