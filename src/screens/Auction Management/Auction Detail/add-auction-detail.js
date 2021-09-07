@@ -8,10 +8,12 @@ import { useLocation } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet, jeweleryDdl } from '../../../redux/actions/jewelery-action';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR } from '../../../constant/redux-type'
+import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR } from '../../../constant/redux-type'
+import { auctionItemAdd } from "../../../redux/actions/auction-item-action"
 let index = 0;
 let arr = [{
-    jewelry_id: null
+    jewelry_id: null,
+    "auction_jewelrycol": "",
 }];
 let dum = []
 const AddDetail = ({ }) => {
@@ -24,7 +26,9 @@ const AddDetail = ({ }) => {
     const [newName, setName] = useState('')
     const [pickList, setPickList] = useState([])
     const [jewelery, setJewelery] = useState([])
-    const [picker, setPicker] = useState([])
+    const [picker, setPicker] = useState([]);
+    const [checkVIP, setCheckVIP] = useState(false)
+    const [checkHide, setcheckHide] = useState(false)
 
     const fetchAuction = (id) => {
         dispatch(auctionIdGet(id)).then((result) => {
@@ -50,8 +54,9 @@ const AddDetail = ({ }) => {
 
     useEffect(() => {
         let uid = location.pathname.split("/");
+       // newMethod();
         fetchAuction(uid[3])
-        form.setFields([{ name: "auction", value: arr }]);
+        form.setFields([{ name: "auction_jewelry", value: arr }]);
         fetchJew()
 
     }, [])
@@ -128,14 +133,45 @@ const AddDetail = ({ }) => {
     }
     function onChange(e) {
         console.log(`checked = ${e.target.checked}`);
-        // setCheck(e.target.checked)
-        // form.setFieldsValue({
-        //     hidden: e.target.checked
-        // })
+        console.log(`name = ${e.target.name} `)
+        if (e.target.name === "vip")
+            setCheckVIP(e.target.checked)
+        else if (e.target.name === "hide")
+            setcheckHide(e.target.checked)
+
+        form.setFieldsValue({
+            [e.target.name]: e.target.checked
+        })
     }
     const handleSubmit = () => {
+        let uid = location.pathname.split("/");
         form.validateFields().then((values) => {
+
+            values.auction_id = uid[3];
+            values.brand = null;
+            values.images = '["https://sothebys-md.brightspotcdn.com/0f/31/244afe58459e8d93cf387233501c/hk1117-byd2m-1.jpg"]';
+            values.currency = "USD";
+            values.auctions_source = null
+            values.vip = values.vip ? 1 : 0
+            values.auctions_auction_id = uid[3]
+            if (values.end_date)
+                values.end_date = values.end_date._d.toISOString()
+            else
+                values.end_date = null
+            if (values.start_date)
+                values.start_date = values.start_date._d.toISOString()
+            else
+                values.start_date = null
             console.log("values", values)
+            dispatch(auctionItemAdd(values)).then((result) => {
+                if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
+                    console.log("res success", result)
+
+                } else if (result.type === AUCTION_ITEM_ADD_ERROR) {
+
+                    console.log("res erro", result)
+                }
+            })
         });
 
     };
@@ -143,7 +179,7 @@ const AddDetail = ({ }) => {
     const handleChangeValue = (val, name, op) => {
         console.log(`val 112= ${val}`, name, op);
         let { auction_jewelry } = form.getFieldsValue()
-        Object.assign(auction_jewelry[name], { jewelry_id: op.value })
+        Object.assign(auction_jewelry[name], { jewelry_id: op.value, "auction_jewelrycol": "" })
         form.setFieldsValue({ auction_jewelry })
         formValues['auction_jewelry'][name] = auction_jewelry;
 
@@ -163,7 +199,10 @@ const AddDetail = ({ }) => {
                         jewelry_id: op.value,
                         ddl_id: item.ddl_id,
                         auction_jewelry_attr_value: [
-                            { ddl_value: "" }
+                            {
+                                ddl_value: "",
+                                "auction_jewelry_attr_valcol": ""
+                            }
                         ]
                     }
                 })
@@ -187,14 +226,17 @@ const AddDetail = ({ }) => {
     }
 
     const removeNewField = (fieldIndex) => {
-        if (Array.isArray(arr) && arr.length > 1) {
+        let formValues = form.getFieldsValue()
 
-            arr.splice(fieldIndex, 1);
+        if (formValues['auction_jewelry'] && formValues['auction_jewelry'].length > 1) {
+
+           formValues['auction_jewelry'].splice(fieldIndex, 1);
         } else {
-            arr[0] = {
-                jewelry_id: null
+            formValues['auction_jewelry'][0] = {
+                jewelry_id: null,
+                "auction_jewelrycol": "",
             }
-            form.setFields([{ name: "auction", value: arr }]);
+           form.setFields([{ name: "auction_jewelry", value:  formValues['auction_jewelry'] }]);
         }
 
         dum.splice(fieldIndex, 1);
@@ -206,12 +248,14 @@ const AddDetail = ({ }) => {
         if (formValues['auction_jewelry'] && formValues['auction_jewelry'].length > 0) {
             formValues['auction_jewelry'].push(
                 {
-                    jewelry_id: null
+                    jewelry_id: null,
+                    "auction_jewelrycol": "",
                 }
             )
         } else {
             formValues['auction_jewelry'] = [{
-                jewelry_id: null
+                jewelry_id: null,
+                "auction_jewelrycol": "",
             }]
         }
 
@@ -272,6 +316,7 @@ const AddDetail = ({ }) => {
                             label="Source"
                             name="source"
                             //  initialValue={val && val.source}
+                            rules={[{ required: true, message: "Please input source!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -285,7 +330,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Auction Name"
                             name="auction_name"
-                            // rules={[{ required: true, message: "Please input auction name!" }]}
+                            rules={[{ required: true, message: "Please input auction name!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -297,25 +342,25 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Auction Lot Number"
                             name="auction_lot_number"
-                            // rules={[{ required: true, message: "Please input auction lot number!" }]}
+                            rules={[{ required: true, message: "Please input auction lot number!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
 
                         >
-                            <Input placeholder="Auction Lot" className="inp" />
+                            <InputNumber maxLength={12} min={0} placeholder="0" />
                         </Form.Item>
                     </Col>
                     <Col className="ant-col-md-8 ant-col-sm-8 ant-col-xs-24">
                         <Form.Item
                             label="Link to Item"
                             name="auction_lot_url"
-                            // rules={[{ required: true, message: "Please input auction lot url!" },
-                            // {
-                            //     pattern: new RegExp(
-                            //         /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-                            //     ),
-                            //     message: "Invalid URL string!",
-                            // }]}
+                            rules={[{ required: true, message: "Please input auction lot url!" },
+                            {
+                                pattern: new RegExp(
+                                    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+                                ),
+                                message: "Invalid URL string!",
+                            }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -327,7 +372,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Start Date"
                             name="start_date"
-
+                            //  rules={[{ required: true, message: "Please input start date!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -339,7 +384,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="End Date"
                             name="end_date"
-
+                            //   rules={[{ required: true, message: "Please input end date!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
 
@@ -359,9 +404,11 @@ const AddDetail = ({ }) => {
 
 
                         <Form.Item
-                            label="Item Name" number
+                            label="Item Name"
                             wrapperCol={{ span: 23 }}
-
+                            labelCol={{ span: 24 }}
+                            rules={[{ required: true, message: "Please input Item Name!" }]}
+                            name="item_name"
                         >
                             <Input placeholder="Item Name" />
                         </Form.Item>
@@ -369,9 +416,9 @@ const AddDetail = ({ }) => {
 
                     <Col className="ant-col-md-6 ant-col-sm-12 ant-col-xs-24">
                         <Form.Item
-                            label="Price Realized"
-                            name="price_realized"
-                            // rules={[{ required: true, message: "Please input price realized!" }]}
+                            label="Price Realised"
+                            name="price_realised"
+                            rules={[{ required: true, message: "Please input price realized!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -383,7 +430,7 @@ const AddDetail = ({ }) => {
                         <Form.Item
                             label="Price Estimate Low"
                             name="estimate_low"
-
+                            rules={[{ required: true, message: "Please input price low!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -398,6 +445,7 @@ const AddDetail = ({ }) => {
 
                             name="estimate_high"
                             label="Price Estimate High"
+                            rules={[{ required: true, message: "Please input price high!" }]}
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
 
@@ -412,7 +460,7 @@ const AddDetail = ({ }) => {
                             name="description"
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
-                        // rules={[{ required: true, message: "Please input description!" }]}
+                            rules={[{ required: true, message: "Please input description!" }]}
 
                         >
                             <Input.TextArea placeholder="Item Description" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
@@ -449,7 +497,7 @@ const AddDetail = ({ }) => {
                     </Col>
 
                     <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
-                        <Form.List name="auction_jewelry" >
+                        <Form.List name="auction_jewelry"   >
                             {(fields, { add, remove }, { errors }) => (
                                 <>
                                     {
@@ -462,7 +510,7 @@ const AddDetail = ({ }) => {
                                                     <Form.Item
                                                         label="Component"
                                                         name={[field.name, "jewelry_id"]}
-
+                                                        rules={[{ required: true, message: "Please input auction jewelry!" }]}
                                                         labelCol={{ span: 24 }}
                                                         wrapperCol={{ span: 23 }}
                                                     >
@@ -502,7 +550,7 @@ const AddDetail = ({ }) => {
                                                                                 <Form.Item
 
                                                                                     label={dum[field.name][attributeField.name] ? dum[field.name][attributeField.name]['component_detail_nm'] : ""}
-                                                                                    name={[attributeField.name, "auction_jewelry_attr_value",0,'ddl_value']}
+                                                                                    name={[attributeField.name, "auction_jewelry_attr_value", 0, 'ddl_value']}
                                                                                     labelCol={{ span: 4 }}
                                                                                     wrapperCol={{ span: 16 }}
                                                                                 >
@@ -534,7 +582,7 @@ const AddDetail = ({ }) => {
                                                                                 </Form.Item> : dum[field.name][attributeField.name] && dum[field.name][attributeField.name]['data_type_desc'] === "number" ?
                                                                                     <Form.Item
                                                                                         label={dum[field.name][attributeField.name] ? dum[field.name][attributeField.name]['component_detail_nm'] : ""}
-                                                                                        name={[attributeField.name, "auction_jewelry_attr_value",0,'ddl_value']}
+                                                                                        name={[attributeField.name, "auction_jewelry_attr_value", 0, 'ddl_value']}
                                                                                         labelCol={{ span: 4 }}
                                                                                         wrapperCol={{ span: 16 }}
 
@@ -543,7 +591,7 @@ const AddDetail = ({ }) => {
                                                                                     </Form.Item> :
                                                                                     <Form.Item
                                                                                         label={dum[field.name][attributeField.name] ? dum[field.name][attributeField.name]['component_detail_nm'] : ""}
-                                                                                        name={[attributeField.name, "auction_jewelry_attr_value",0,'ddl_value']}
+                                                                                        name={[attributeField.name, "auction_jewelry_attr_value", 0, 'ddl_value']}
                                                                                         labelCol={{ span: 4 }}
                                                                                         wrapperCol={{ span: 16 }}
                                                                                     >
@@ -588,10 +636,10 @@ const AddDetail = ({ }) => {
                             name="hide"
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
-                            initialValue={false}
+                            initialValue={checkHide}
 
                         >
-                            <Checkbox onChange={onChange}>Hide</Checkbox>
+                            <Checkbox checked={checkHide} name="hide" onChange={onChange}>Hide</Checkbox>
                         </Form.Item>
                     </Col>
                     <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-12">
@@ -599,10 +647,10 @@ const AddDetail = ({ }) => {
                             name="vip"
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
-                            initialValue={false}
+                            initialValue={checkVIP}
 
                         >
-                            <Checkbox onChange={onChange}>VIP</Checkbox>
+                            <Checkbox name="vip" checked={checkVIP} onChange={onChange}>VIP</Checkbox>
                         </Form.Item>
                     </Col>
                     <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">

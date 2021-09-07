@@ -30,7 +30,7 @@ export const auctionItemGet = (id) => dispatch => {
 
 export const auctionItemAdd = (data) => dispatch => {
     dispatch({ type: AUCTION_ITEM_ADD_REQUEST });
-    let form = new FormData();
+    // let form = new FormData();
     console.log("data", data)
     return axios({
       method: "POST",
@@ -39,7 +39,7 @@ export const auctionItemAdd = (data) => dispatch => {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      data: form
+      data: data
     })
       .then(response => {
         return dispatch({ type: AUCTION_ITEM_ADD_SUCCESS, response: response });
