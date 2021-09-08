@@ -32,7 +32,7 @@ const ItemsAuction = () => {
 
         history.push({
             pathname: `auction-detail/${id}/edit/${data.id}`,
-            state: { edit: true },
+           // state: { edit: true },
         })
         // setEditRecord(data)
         // setEdit(true)
@@ -92,7 +92,7 @@ const ItemsAuction = () => {
         // console.log("id", id[2])
         history.push({
             pathname: `auction-detail/${id}`,
-            state: { edit: false },
+           // state: { edit: false },
         })
         // history.push(`auction-detail/${id}`, { edit: false })
     }

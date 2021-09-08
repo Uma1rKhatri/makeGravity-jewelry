@@ -33,6 +33,7 @@ const AddDetail = ({ }) => {
     const [checkVIP, setCheckVIP] = useState(false)
     const [checkHide, setcheckHide] = useState(false)
     const [collection, setCollection] = useState([])
+    const [img, setImg] = useState([])
 
     const fetchCollection = () => {
         dispatch(collectionGet()).then((result) => {
@@ -73,7 +74,7 @@ const AddDetail = ({ }) => {
         // const { edit } = state;
         let uid = location.pathname.split("/");
         console.log("location 58", state, uid[5])
-        if (state?.edit === true) {
+        if (uid[4] === "edit") {
             console.log("edit 62")
             dispatch(auctionItemDetailsGet(uid[5])).then((result) => {
 
@@ -192,10 +193,12 @@ const AddDetail = ({ }) => {
     const handleSubmit = () => {
         let uid = location.pathname.split("/");
         form.validateFields().then((values) => {
-
+ 
             values.auction_id = uid[3];
             values.brand = null;
-            values.images = '["https://sothebys-md.brightspotcdn.com/0f/31/244afe58459e8d93cf387233501c/hk1117-byd2m-1.jpg"]';
+            if(values.images)
+            values.images = `[${ values.images.split(' ')}]`
+           // values.images = '["https://sothebys-md.brightspotcdn.com/0f/31/244afe58459e8d93cf387233501c/hk1117-byd2m-1.jpg"]';
             values.currency = "USD";
             values.auctions_source = null
             values.vip = values.vip ? 1 : 0
@@ -208,7 +211,7 @@ const AddDetail = ({ }) => {
                 values.start_date = values.start_date._d.toISOString()
             else
                 values.start_date = null
-            console.log("values", values)
+                console.log("values", values)
             dispatch(auctionItemAdd(values)).then((result) => {
                 if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
                     console.log("res success", result)
@@ -346,7 +349,10 @@ const AddDetail = ({ }) => {
     const handleCollection = (e, option) => {
         console.log("e, option", e, option)
     }
-
+const handleImage = (e) => {
+    console.log("e", e.target.value)
+    setImg(e.target.value)
+}
 console.log("collection", collection)
     return (
         <React.Fragment>
@@ -444,10 +450,29 @@ console.log("collection", collection)
                 </Row>
                 <Row justify="space-around">
                     <Col xs={24} sm={15} md={10} className="gr-mb-2">
-                        <DemoCarousel />
+                        <DemoCarousel data={img} />
                     </Col>
                 </Row>
                 <Row>
+                <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
+                        <Form.Item
+                            label="Images"
+                            name="images"
+
+                            rules={[{ required: true, message: "Please input image url!" },
+                            {
+                                pattern: new RegExp(
+                                    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+                                ),
+                                message: "Invalid URL string!",
+                            }]}
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+
+                        >
+                            <Input.TextArea onChange={handleImage} placeholder="Images  URL" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
+                        </Form.Item>
+                        </Col>
                     <Col className="ant-col-md-6 ant-col-sm-12 ant-col-xs-24">
 
 
