@@ -34,6 +34,7 @@ const AddDetail = ({ }) => {
     const [checkHide, setcheckHide] = useState(false)
     const [collection, setCollection] = useState([])
     const [img, setImg] = useState([])
+    const [collectionName, setCollectionName] = useState('')
 
     const fetchCollection = () => {
         dispatch(collectionGet()).then((result) => {
@@ -83,10 +84,32 @@ const AddDetail = ({ }) => {
                     console.log("result 66", result.response.data.data)
                     let val = result.response.data.data;
                     console.log("auction_jewelry", val)
+                    console.log("val.images.toString()", typeof val.images)
+                    let imgConvert =val.images.replace(/,/g, " ").replace("[", "").replace("]", "");
+                    setImg(imgConvert)
+                    setCheckVIP(val.vip)
+                    setcheckHide(val.hide)
+                    setCollectionName(val.collection_name)
                     form.setFieldsValue({
                         auction_lot_number: val.auction_lot_number,
                         auction_name: val.auction_name,
-                        source: val.source
+                        source: val.source,
+                        auction_lot_url: val.auction_lot_url,
+                        condition_report:val.condition_report,
+                        estimate_high:val.estimate_high,
+                        estimate_low:val.estimate_low,
+                        hide:val.hide,
+                        images:  imgConvert,
+                        start_date: val.start_date ?  moment(val.start_date) : "",
+                        end_date: val.end_date? moment(val.end_date): "",
+                        item_name: val.item_name,
+                        vip: val.vip,
+                        price_realised: val.price_realised,
+                        classification: val.classification,
+                        score : val.score,
+                        description:val.description,
+                        collection_id:val.collection_id,
+                        auction_jewelry:val.auction_jewelries
                     })
                     // form.setFields([{ 
                     //     name: "auction_jewelry", value: formValues[auction_jewelry] }]
@@ -211,6 +234,7 @@ const AddDetail = ({ }) => {
                 values.start_date = values.start_date._d.toISOString()
             else
                 values.start_date = null
+            values.collection_name = collectionName
                 console.log("values", values)
             dispatch(auctionItemAdd(values)).then((result) => {
                 if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
@@ -347,7 +371,8 @@ const AddDetail = ({ }) => {
     //         ]
     // };
     const handleCollection = (e, option) => {
-        console.log("e, option", e, option)
+        console.log("e, option", e, option.children)
+        setCollectionName(option.children)
     }
 const handleImage = (e) => {
     console.log("e", e.target.value)
@@ -588,7 +613,7 @@ console.log("collection", collection)
                                                         labelCol={{ span: 24 }}
                                                         wrapperCol={{ span: 23 }}
                                                     >
-                                                        <Select onChange={(e, options) => handleChangeValue(e, field.name, options)}>
+                                                        <Select  onSelect={(e, options) => handleChangeValue(e, field.name, options)}>
                                                             {jewelery && jewelery.length && jewelery.map((val, index) => {
                                                                 return (
 
@@ -743,7 +768,7 @@ console.log("collection", collection)
                     <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
                         <Form.Item
                             label="Collection Assigment"
-                            name="collection_assigment"
+                            name="collection_id"
 
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
