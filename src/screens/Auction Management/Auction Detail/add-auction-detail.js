@@ -80,12 +80,12 @@ const AddDetail = ({ }) => {
             dispatch(auctionItemDetailsGet(uid[5])).then((result) => {
 
                 if (result.type === AUCTION_ITEM_DETAILS_GET_SUCCESS) {
-                    let formValues = form.getFieldsValue()
+                    // let formValues = form.getFieldsValue()
                     console.log("result 66", result.response.data.data)
                     let val = result.response.data.data;
                     console.log("auction_jewelry", val)
                     console.log("val.images.toString()", typeof val.images)
-                    let imgConvert =val.images.replace(/,/g, " ").replace("[", "").replace("]", "");
+                    let imgConvert = val.images.replace(/,/g, " ").replace("[", "").replace("]", "");
                     setImg(imgConvert)
                     setCheckVIP(val.vip)
                     setcheckHide(val.hide)
@@ -95,22 +95,30 @@ const AddDetail = ({ }) => {
                         auction_name: val.auction_name,
                         source: val.source,
                         auction_lot_url: val.auction_lot_url,
-                        condition_report:val.condition_report,
-                        estimate_high:val.estimate_high,
-                        estimate_low:val.estimate_low,
-                        hide:val.hide,
-                        images:  imgConvert,
-                        start_date: val.start_date ?  moment(val.start_date) : "",
-                        end_date: val.end_date? moment(val.end_date): "",
+                        condition_report: val.condition_report,
+                        estimate_high: val.estimate_high,
+                        estimate_low: val.estimate_low,
+                        hide: val.hide,
+                        images: imgConvert,
+                        start_date: val.start_date ? moment(val.start_date) : "",
+                        end_date: val.end_date ? moment(val.end_date) : "",
                         item_name: val.item_name,
                         vip: val.vip,
                         price_realised: val.price_realised,
                         classification: val.classification,
-                        score : val.score,
-                        description:val.description,
-                        collection_id:val.collection_id,
-                        auction_jewelry:val.auction_jewelries
+                        score: val.score,
+                        description: val.description,
+                        collection_id: val.collection_id,
+                        auction_jewelry: val.auction_jewelries
                     })
+                    onLoadChangeValue()
+                    // console.log('form.getFieldValue("auction_jewelry")', form.getFieldValue("auction_jewelry"));
+                    // let list_auction_jewelry = form.getFieldValue("auction_jewelry");
+                    // if (list_auction_jewelry && list_auction_jewelry.length > 0) {
+                    //     list_auction_jewelry.map((item, index) => {
+                    //         onLoadChangeValue(item.jewelry_id, index, { value: item.jewelry_id })
+                    //     })
+                    // }
                     // form.setFields([{ 
                     //     name: "auction_jewelry", value: formValues[auction_jewelry] }]
                     //     );
@@ -216,12 +224,12 @@ const AddDetail = ({ }) => {
     const handleSubmit = () => {
         let uid = location.pathname.split("/");
         form.validateFields().then((values) => {
- 
+
             values.auction_id = uid[3];
             values.brand = null;
-            if(values.images)
-            values.images = `[${ values.images.split(' ')}]`
-           // values.images = '["https://sothebys-md.brightspotcdn.com/0f/31/244afe58459e8d93cf387233501c/hk1117-byd2m-1.jpg"]';
+            if (values.images)
+                values.images = `[${values.images.split(' ')}]`
+            // values.images = '["https://sothebys-md.brightspotcdn.com/0f/31/244afe58459e8d93cf387233501c/hk1117-byd2m-1.jpg"]';
             values.currency = "USD";
             values.auctions_source = null
             values.vip = values.vip ? 1 : 0
@@ -235,7 +243,7 @@ const AddDetail = ({ }) => {
             else
                 values.start_date = null
             values.collection_name = collectionName
-                console.log("values", values)
+            console.log("values", values)
             dispatch(auctionItemAdd(values)).then((result) => {
                 if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
                     console.log("res success", result)
@@ -250,13 +258,54 @@ const AddDetail = ({ }) => {
 
     };
 
+    const onLoadChangeValue = () => {
+        formValues = form.getFieldsValue()
+        let { auction_jewelry } = form.getFieldsValue()
+        if (auction_jewelry && auction_jewelry.length > 0) {
+            auction_jewelry.map((item, index) => {
+                console.log('item is item', item);
+                let { auction_jewelry_attributes } = item
+                if (auction_jewelry_attributes && auction_jewelry_attributes.length > 0) {
+                    let arr = []
+                    let finalResult = auction_jewelry_attributes.map((attribute) => {
+                        console.log('attribute is attribute', attribute)
+                        let { jewelry_attr_id, auction_jewelry_id, jewelry_attribute, ddl_id, auction_jewelry_attr_values } = attribute
+                        let { component_detail_nm, data_type_desc } = jewelry_attribute
+                        arr.push({
+                            'component_detail_nm': component_detail_nm,
+                            'data_type_desc': data_type_desc
+                        })
+                        return {
+                            jewelry_attr_id: jewelry_attr_id,
+                            jewelry_id: auction_jewelry_id,
+                            ddl_id: ddl_id,
+                            auction_jewelry_attr_value: [
+                                {
+                                    ddl_value: auction_jewelry_attr_values[0].ddl_value,
+                                    "auction_jewelry_attr_valcol": ""
+                                }
+                            ]
+                        }
+                    })
+                    dum[index] = arr;
+                    Object.assign(auction_jewelry[index], { auction_jewelry_attribute: finalResult })
+                    form.setFieldsValue({ auction_jewelry })
+                    formValues['auction_jewelry'][index] = auction_jewelry;
+                    setItems([])
+                }
+            })
+        }
+
+    }
+
     const handleChangeValue = (val, name, op) => {
         console.log(`val 112= ${val}`, name, op);
         let { auction_jewelry } = form.getFieldsValue()
         Object.assign(auction_jewelry[name], { jewelry_id: op.value })
         form.setFieldsValue({ auction_jewelry })
+        console.log('check form values', formValues);
+        formValues = form.getFieldsValue()
         formValues['auction_jewelry'][name] = auction_jewelry;
-
 
         dispatch(jeweleryAttributeGet(val)).then((result) => {
 
@@ -293,6 +342,9 @@ const AddDetail = ({ }) => {
                 // setPicker([])
             }
         })
+
+
+
         //  fetchJew()
         //  console.log(" setJewelery([])", jewelery)
 
@@ -374,11 +426,11 @@ const AddDetail = ({ }) => {
         console.log("e, option", e, option.children)
         setCollectionName(option.children)
     }
-const handleImage = (e) => {
-    console.log("e", e.target.value)
-    setImg(e.target.value)
-}
-console.log("collection", collection)
+    const handleImage = (e) => {
+        console.log("e", e.target.value)
+        setImg(e.target.value)
+    }
+    console.log("collection", collection)
     return (
         <React.Fragment>
             {console.log("form.getFieldsValue()", form.getFieldsValue())}
@@ -479,7 +531,7 @@ console.log("collection", collection)
                     </Col>
                 </Row>
                 <Row>
-                <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
+                    <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                         <Form.Item
                             label="Images"
                             name="images"
@@ -497,7 +549,7 @@ console.log("collection", collection)
                         >
                             <Input.TextArea onChange={handleImage} placeholder="Images  URL" className="inp" autoSize={{ minRows: 3, maxRows: 5 }} />
                         </Form.Item>
-                        </Col>
+                    </Col>
                     <Col className="ant-col-md-6 ant-col-sm-12 ant-col-xs-24">
 
 
@@ -613,7 +665,7 @@ console.log("collection", collection)
                                                         labelCol={{ span: 24 }}
                                                         wrapperCol={{ span: 23 }}
                                                     >
-                                                        <Select  onSelect={(e, options) => handleChangeValue(e, field.name, options)}>
+                                                        <Select onChange={(e, options) => handleChangeValue(e, field.name, options)}>
                                                             {jewelery && jewelery.length && jewelery.map((val, index) => {
                                                                 return (
 
@@ -774,16 +826,16 @@ console.log("collection", collection)
                             wrapperCol={{ span: 24 }}
 
                         >
-                        <Select onChange={(e, options) => handleCollection(e,  options)}>
-                                                            {collection && collection.length && collection.map((val, index) => {
-                                                                return (
+                            <Select onChange={(e, options) => handleCollection(e, options)}>
+                                {collection && collection.length && collection.map((val, index) => {
+                                    return (
 
-                                                                    <Option value={val.id} key={val.id} >{val.collection_name}</Option>
-                                                                )
+                                        <Option value={val.id} key={val.id} >{val.collection_name}</Option>
+                                    )
 
-                                                            })}
+                                })}
 
-                                                        </Select>
+                            </Select>
                         </Form.Item>
                     </Col>
                 </Row>
