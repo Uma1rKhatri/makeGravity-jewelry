@@ -8,8 +8,10 @@ import { useLocation, useHistory } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet, jeweleryDdl } from '../../../redux/actions/jewelery-action';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
-import { JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR, AUCTION_ITEM_DETAILS_GET_SUCCESS, AUCTION_ITEM_DETAILS_GET_ERROR } from '../../../constant/redux-type'
+import { COLLECTION_GET_SUCCESS, COLLECTION_GET_ERROR, JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR, AUCTION_ITEM_DETAILS_GET_SUCCESS, AUCTION_ITEM_DETAILS_GET_ERROR } from '../../../constant/redux-type'
 import { auctionItemAdd, auctionItemDetailsGet } from "../../../redux/actions/auction-item-action"
+import { collectionGet } from "../../../redux/actions/collection-action"
+
 let index = 0;
 let arr = [{
     jewelry_id: null,
@@ -30,6 +32,19 @@ const AddDetail = ({ }) => {
     const [picker, setPicker] = useState([]);
     const [checkVIP, setCheckVIP] = useState(false)
     const [checkHide, setcheckHide] = useState(false)
+    const [collection, setCollection] = useState([])
+
+    const fetchCollection = () => {
+        dispatch(collectionGet()).then((result) => {
+            if (result.type === COLLECTION_GET_SUCCESS) {
+                console.log("result", result.response.data.data)
+                setCollection(result.response.data.data)
+            } else if (result.type === COLLECTION_GET_ERROR) {
+                setCollection([])
+            }
+        })
+    }
+
 
     const fetchAuction = (id) => {
         dispatch(auctionIdGet(id)).then((result) => {
@@ -88,6 +103,7 @@ const AddDetail = ({ }) => {
         }
 
         fetchJew()
+        fetchCollection()
 
     }, [])
     const fetchJew = () => {
@@ -210,7 +226,7 @@ const AddDetail = ({ }) => {
     const handleChangeValue = (val, name, op) => {
         console.log(`val 112= ${val}`, name, op);
         let { auction_jewelry } = form.getFieldsValue()
-        Object.assign(auction_jewelry[name], { jewelry_id: op.value})
+        Object.assign(auction_jewelry[name], { jewelry_id: op.value })
         form.setFieldsValue({ auction_jewelry })
         formValues['auction_jewelry'][name] = auction_jewelry;
 
@@ -327,8 +343,11 @@ const AddDetail = ({ }) => {
     //             }
     //         ]
     // };
+    const handleCollection = (e, option) => {
+        console.log("e, option", e, option)
+    }
 
-
+console.log("collection", collection)
     return (
         <React.Fragment>
             {console.log("form.getFieldsValue()", form.getFieldsValue())}
@@ -705,7 +724,16 @@ const AddDetail = ({ }) => {
                             wrapperCol={{ span: 24 }}
 
                         >
-                            <Input placeholder="Collection Assigment" className="inp" />
+                        <Select onChange={(e, options) => handleCollection(e,  options)}>
+                                                            {collection && collection.length && collection.map((val, index) => {
+                                                                return (
+
+                                                                    <Option value={val.id} key={val.id} >{val.collection_name}</Option>
+                                                                )
+
+                                                            })}
+
+                                                        </Select>
                         </Form.Item>
                     </Col>
                 </Row>
