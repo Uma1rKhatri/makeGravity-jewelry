@@ -210,7 +210,7 @@ const AddDetail = ({ }) => {
     const handleChangeValue = (val, name, op) => {
         console.log(`val 112= ${val}`, name, op);
         let { auction_jewelry } = form.getFieldsValue()
-        Object.assign(auction_jewelry[name], { jewelry_id: op.value, "auction_jewelrycol": "" })
+        Object.assign(auction_jewelry[name], { jewelry_id: op.value})
         form.setFieldsValue({ auction_jewelry })
         formValues['auction_jewelry'][name] = auction_jewelry;
 
@@ -264,8 +264,7 @@ const AddDetail = ({ }) => {
             formValues['auction_jewelry'].splice(fieldIndex, 1);
         } else {
             formValues['auction_jewelry'][0] = {
-                jewelry_id: null,
-                "auction_jewelrycol": "",
+                jewelry_id: null
             }
             form.setFields([{ name: "auction_jewelry", value: formValues['auction_jewelry'] }]);
         }
@@ -279,14 +278,12 @@ const AddDetail = ({ }) => {
         if (formValues['auction_jewelry'] && formValues['auction_jewelry'].length > 0) {
             formValues['auction_jewelry'].push(
                 {
-                    jewelry_id: null,
-                    "auction_jewelrycol": "",
+                    jewelry_id: null
                 }
             )
         } else {
             formValues['auction_jewelry'] = [{
-                jewelry_id: null,
-                "auction_jewelrycol": "",
+                jewelry_id: null
             }]
         }
 
@@ -514,7 +511,7 @@ const AddDetail = ({ }) => {
                     <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
                         <Form.Item
                             label="Jewelry Classification"
-                            name="jewelry_classification"
+                            name="classification"
 
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 23 }}
@@ -716,9 +713,9 @@ const AddDetail = ({ }) => {
             </Form>
 
             <div style={{ float: 'right' }} >
-                <Button style={{ marginRight: '5px' }} type="primary" className="gr-mb-2" onClick={() => handleSubmit()}  >
+                {/* <Button style={{ marginRight: '5px' }} type="primary" className="gr-mb-2" onClick={() => handleSubmit()}  >
                     {"Save"}
-                </Button>
+                </Button> */}
                 <Button type="primary" onClick={() => handleSubmit()} className="gr-mb-2" >
                     {"Save & Approve"}
                 </Button>
