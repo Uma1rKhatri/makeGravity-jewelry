@@ -16,7 +16,7 @@ import auctionItemGet from "./auction item/auction-item-get-reducer";
 import auctionItemAdd from "./auction item/auction-item-add-reducer";
 import jeweleryDdl from "./jewelery/jewelery-ddl-reducer";
 import auctionItemDetailGet from "./auction item/auction-item-get-details-reducer";
-
+import auctionItemEdit from "./auction item/auction-item-edit-reducer";
 export default combineReducers({
   login,
   userGet,
@@ -34,6 +34,7 @@ export default combineReducers({
   auctionItemGet,
   auctionItemAdd,
   jeweleryDdl,
-  auctionItemDetailGet
+  auctionItemDetailGet,
+  auctionItemEdit
 
 });

@@ -8,8 +8,8 @@ import { useLocation, useHistory } from 'react-router-dom'
 import { jewelryGet, jeweleryAttributeGet, pickListGet, jeweleryDdl } from '../../../redux/actions/jewelery-action';
 import { auctionIdGet } from "../../../redux/actions/auction-action"
 import DemoCarousel from './slider';
-import { COLLECTION_GET_SUCCESS, COLLECTION_GET_ERROR, JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR, AUCTION_ITEM_DETAILS_GET_SUCCESS, AUCTION_ITEM_DETAILS_GET_ERROR } from '../../../constant/redux-type'
-import { auctionItemAdd, auctionItemDetailsGet } from "../../../redux/actions/auction-item-action"
+import { COLLECTION_GET_SUCCESS, COLLECTION_GET_ERROR, JEWELERY_GET_SUCCESS, JEWELERY_GET_ERROR, JEWELERY_ATTRIBUTE_GET_SUCCESS, JEWELERY_ATTRIBUTE_GET_ERROR, PICKLIST_GET_SUCCESS, PICKLIST_GET_ERROR, AUCTION_GET_ID_SUCCESS, AUCTION_GET_ID_ERROR, JEWELERY_DDL_ADD_SUCCESS, JEWELERY_DDL_ADD_ERROR, AUCTION_ITEM_ADD_SUCCESS, AUCTION_ITEM_ADD_ERROR, AUCTION_ITEM_DETAILS_GET_SUCCESS, AUCTION_ITEM_DETAILS_GET_ERROR, AUCTION_ITEM_EDIT_SUCCESS, AUCTION_ITEM_EDIT_ERROR } from '../../../constant/redux-type'
+import { auctionItemAdd, auctionItemDetailsGet,auctionItemEdit } from "../../../redux/actions/auction-item-action"
 import { collectionGet } from "../../../redux/actions/collection-action"
 
 let index = 0;
@@ -224,7 +224,7 @@ const AddDetail = ({ }) => {
         })
     }
     const handleSubmit = (val) => {
-        console.log("val",val)
+        console.log("val", val)
         let uid = location.pathname.split("/");
         form.validateFields().then((values) => {
 
@@ -250,16 +250,31 @@ const AddDetail = ({ }) => {
 
             values.collection_name = collectionName
             console.log("values", values)
-            // dispatch(auctionItemAdd(values)).then((result) => {
-            //     if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
-            //         console.log("res success", result)
-            //         history.push(`/auction-item/${uid[3]}`)
+            if (uid[4] === "edit") {
+                values.id = uid[5]
+                dispatch(auctionItemEdit(values, uid[5])).then((result) => {
+                    if (result.type === AUCTION_ITEM_EDIT_SUCCESS) {
+                        console.log("res success", result)
+                        history.push(`/auction-item/${uid[3]}`)
 
-            //     } else if (result.type === AUCTION_ITEM_ADD_ERROR) {
+                    } else if (result.type === AUCTION_ITEM_EDIT_ERROR) {
 
-            //         console.log("res erro", result)
-            //     }
-            // })
+                        console.log("res erro", result)
+                    }
+                })
+            } else {
+                dispatch(auctionItemAdd(values)).then((result) => {
+                    if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
+                        console.log("res success", result)
+                        history.push(`/auction-item/${uid[3]}`)
+
+                    } else if (result.type === AUCTION_ITEM_ADD_ERROR) {
+
+                        console.log("res erro", result)
+                    }
+                })
+            }
+
         });
 
     };
