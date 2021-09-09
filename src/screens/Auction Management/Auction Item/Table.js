@@ -16,8 +16,10 @@ const TableComponent = ({ dataSource, loading, record }) => {
             key: 'images',
             width: 200,
             render: (text, record) => (
+            
                 <div style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <img src={record.images !== null ? record.auction_image_url : null} alt="image" height={60} width={60} />
+                     {console.log("record.images", record.images.replace(/,/g, " ").replace("[", "").replace("]", "").split(' ')[0])}
+                    <img src={record.images !== null ? record.images.replace(/,/g, " ").replace("[", "").replace("]", "").split(' ')[0] : "https://res.cloudinary.com/asadaziz/image/upload/v1561444483/dummyavatar_kb3aub.png"} alt="image" height={60} width={60} />
                 </div>
             )
         },
