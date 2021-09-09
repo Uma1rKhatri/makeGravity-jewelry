@@ -223,7 +223,8 @@ const AddDetail = ({ }) => {
             [e.target.name]: e.target.checked
         })
     }
-    const handleSubmit = () => {
+    const handleSubmit = (val) => {
+        console.log("val",val)
         let uid = location.pathname.split("/");
         form.validateFields().then((values) => {
 
@@ -234,6 +235,7 @@ const AddDetail = ({ }) => {
             // values.images = '["https://sothebys-md.brightspotcdn.com/0f/31/244afe58459e8d93cf387233501c/hk1117-byd2m-1.jpg"]';
             values.currency = "USD";
             values.auctions_source = null
+            values.is_approver = val
             values.vip = values.vip ? 1 : 0
             values.auctions_auction_id = uid[3]
             if (values.end_date)
@@ -848,10 +850,10 @@ const AddDetail = ({ }) => {
             </Form>
 
             <div style={{ float: 'right' }} >
-                {/* <Button style={{ marginRight: '5px' }} type="primary" className="gr-mb-2" onClick={() => handleSubmit()}  >
+                <Button style={{ marginRight: '5px' }} type="primary" className="gr-mb-2" onClick={() => handleSubmit(false)}  >
                     {"Save"}
-                </Button> */}
-                <Button type="primary" onClick={() => handleSubmit()} className="gr-mb-2" >
+                </Button>
+                <Button type="primary" onClick={() => handleSubmit(true)} className="gr-mb-2" >
                     {"Save & Approve"}
                 </Button>
             </div>
