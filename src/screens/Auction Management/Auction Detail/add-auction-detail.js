@@ -250,16 +250,16 @@ const AddDetail = ({ }) => {
 
             values.collection_name = collectionName
             console.log("values", values)
-            dispatch(auctionItemAdd(values)).then((result) => {
-                if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
-                    console.log("res success", result)
-                    history.push(`/auction-item/${uid[3]}`)
+            // dispatch(auctionItemAdd(values)).then((result) => {
+            //     if (result.type === AUCTION_ITEM_ADD_SUCCESS) {
+            //         console.log("res success", result)
+            //         history.push(`/auction-item/${uid[3]}`)
 
-                } else if (result.type === AUCTION_ITEM_ADD_ERROR) {
+            //     } else if (result.type === AUCTION_ITEM_ADD_ERROR) {
 
-                    console.log("res erro", result)
-                }
-            })
+            //         console.log("res erro", result)
+            //     }
+            // })
         });
 
     };
@@ -275,7 +275,7 @@ const AddDetail = ({ }) => {
                     let arr = []
                     let finalResult = auction_jewelry_attributes.map((attribute) => {
                         console.log('attribute is attribute', attribute)
-                        let { jewelry_attr_id, auction_jewelry_id, jewelry_attribute, ddl_id, auction_jewelry_attr_values } = attribute
+                        let { jewelry_attr_id, auction_jewelry_id, jewelry_attribute, ddl_id, auction_jewelry_attr_values, id } = attribute
                         let { component_detail_nm, data_type_desc } = jewelry_attribute
                         arr.push({
                             'component_detail_nm': component_detail_nm,
@@ -283,11 +283,13 @@ const AddDetail = ({ }) => {
                             'ddl_id': ddl_id
                         })
                         return {
+                            id: id,
                             jewelry_attr_id: jewelry_attr_id,
                             jewelry_id: auction_jewelry_id,
                             ddl_id: ddl_id,
                             auction_jewelry_attr_value: [
                                 {
+                                    id: auction_jewelry_attr_values[0].id,
                                     ddl_value: auction_jewelry_attr_values[0].ddl_value,
                                     "auction_jewelry_attr_valcol": ""
                                 }
