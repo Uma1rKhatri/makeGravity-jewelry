@@ -88,7 +88,7 @@ const AddDetail = ({ }) => {
                     let imgConvert = val.images.replace(/,/g, " ").replace("[", "").replace("]", "");
                     setImg(imgConvert)
                     setCheckVIP(val.vip)
-                    setcheckHide(val.hide)
+                    setcheckHide(val.auction_data_reviewed && val.auction_data_reviewed.length > 0 ? val.auction_data_reviewed[0].hide : false)
                     setCollectionName(val.collection_name)
                     form.setFieldsValue({
                         auction_lot_number: val.auction_lot_number,
@@ -98,7 +98,6 @@ const AddDetail = ({ }) => {
                         condition_report: val.condition_report,
                         estimate_high: val.estimate_high,
                         estimate_low: val.estimate_low,
-                        hide: val.hide,
                         images: imgConvert,
                         start_date: val.start_date ? moment(val.start_date) : "",
                         end_date: val.end_date ? moment(val.end_date) : "",
@@ -108,8 +107,11 @@ const AddDetail = ({ }) => {
                         classification: val.classification,
                         score: val.score,
                         description: val.description,
-                        collection_id: val.collection_id,
-                        auction_jewelry: val.auction_jewelries
+                        auction_jewelry: val.auction_jewelries,
+                        score: val.auction_data_reviewed && val.auction_data_reviewed.length > 0 ? val.auction_data_reviewed[0].score : "",
+                        collection_id: val.auction_data_reviewed && val.auction_data_reviewed.length > 0 ? val.auction_data_reviewed[0].collection_id : "",
+                        hide: val.auction_data_reviewed && val.auction_data_reviewed.length > 0 ? val.auction_data_reviewed[0].hide : false
+
                     })
                     onLoadChangeValue()
                     // console.log('form.getFieldValue("auction_jewelry")', form.getFieldValue("auction_jewelry"));
@@ -242,6 +244,8 @@ const AddDetail = ({ }) => {
                 values.start_date = values.start_date._d.toISOString()
             else
                 values.start_date = null
+
+
             values.collection_name = collectionName
             console.log("values", values)
             dispatch(auctionItemAdd(values)).then((result) => {
@@ -273,7 +277,8 @@ const AddDetail = ({ }) => {
                         let { component_detail_nm, data_type_desc } = jewelry_attribute
                         arr.push({
                             'component_detail_nm': component_detail_nm,
-                            'data_type_desc': data_type_desc
+                            'data_type_desc': data_type_desc,
+                            'ddl_id': ddl_id
                         })
                         return {
                             jewelry_attr_id: jewelry_attr_id,
@@ -295,6 +300,7 @@ const AddDetail = ({ }) => {
                 }
             })
         }
+
 
     }
 
@@ -824,12 +830,11 @@ const AddDetail = ({ }) => {
 
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
-
+                            initialValue={null}
                         >
                             <Select onChange={(e, options) => handleCollection(e, options)}>
                                 {collection && collection.length && collection.map((val, index) => {
                                     return (
-
                                         <Option value={val.id} key={val.id} >{val.collection_name}</Option>
                                     )
 
