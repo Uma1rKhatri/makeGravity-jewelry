@@ -290,7 +290,7 @@ const AddDetail = ({ }) => {
                     let arr = []
                     let finalResult = auction_jewelry_attributes.map((attribute) => {
                         console.log('attribute is attribute', attribute)
-                        let { jewelry_attr_id, auction_jewelry_id, jewelry_attribute, ddl_id, auction_jewelry_attr_values, id } = attribute
+                        let { jewelry_attr_id, jewelry_id, auction_jewelry_id, jewelry_attribute, ddl_id, auction_jewelry_attr_values, id } = attribute
                         let { component_detail_nm, data_type_desc } = jewelry_attribute
                         arr.push({
                             'component_detail_nm': component_detail_nm,
@@ -300,7 +300,7 @@ const AddDetail = ({ }) => {
                         return {
                             id: id,
                             jewelry_attr_id: jewelry_attr_id,
-                            jewelry_id: auction_jewelry_id,
+                            jewelry_id: jewelry_id,
                             ddl_id: ddl_id,
                             auction_jewelry_attr_value: [
                                 {
