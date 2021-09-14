@@ -8,11 +8,14 @@ import {
   DashboardOutlined,
   DeploymentUnitOutlined,
   MenuOutlined,
-  MoneyCollectOutlined
+  MoneyCollectOutlined,
+  SketchOutlined
 } from "@ant-design/icons";
 import { Layout, Menu, Icon, Dropdown } from "antd";
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
+
+
 
 
 const AppSidebar = ({ props, test }) => {
@@ -84,6 +87,15 @@ const AppSidebar = ({ props, test }) => {
           >
             <Link to={`/auction-collection`} className="route-link">
               <span>Auction Collection</span>
+            </Link>
+          </Menu.Item>
+
+          <Menu.Item
+            key="auction-jewelery"
+            icon={<SketchOutlined />}
+          >
+            <Link to={`/auction-jewelery`} className="route-link">
+              <span>Auction Jewelery</span>
             </Link>
           </Menu.Item>
           {/* </SubMenu> */}
