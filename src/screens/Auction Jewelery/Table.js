@@ -3,6 +3,7 @@ import { Table, Empty, Spin, Tooltip } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
 import Loader from 'react-loader-spinner';
 import { useHistory } from 'react-router-dom';
+
 const TableComponent = ({ dataSource, loading, record }) => {
     const [flag, setFlag] = useState(false)
     const history = useHistory();
@@ -41,34 +42,36 @@ const TableComponent = ({ dataSource, loading, record }) => {
             width: 200
         },
 
-        // {
-        //     title: 'Action',
-        //     dataIndex: 'action',
-        //     key: 'action',
-        //     width: 120,
-        //     render: (text, record) => (
-        //         <div>
-        //             <Tooltip title="Edit">
-        //                 <EditOutlined
-        //                     className="actionTooltip"
-        //                     onClick={() => handleEdit(record)}
-        //                     style={{
-        //                         color: "green",
-        //                         marginRight: 10,
-        //                     }}
-        //                 />
-        //             </Tooltip>
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            width: 120,
+            render: (text, record) => (
+                <div>
+                    <Tooltip title="Edit">
+                        <EditOutlined
+                            className="actionTooltip"
+                            onClick={() => handleEdit(record)}
+                            style={{
+                                color: "green",
+                                marginRight: 10,
+                            }}
+                        />
+                    </Tooltip>
 
-        //         </div>)
+                </div>)
 
-        // },
+        },
     ];
+
 
     const handleEdit = (data) => {
         console.log("data", data)
         record(data)
     }
 console.log("dataSource", dataSource)
+
     return (
         <>
             <div className="user-table">

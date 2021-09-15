@@ -5,9 +5,9 @@ import TableComponent from "./Table"
 import AddJewlry from './add-Jewelry';
 import './auction-jewelery.css';
 import {useDispatch, useSelector} from 'react-redux'
-import { COLLECTION_GET_SUCCESS, COLLECTION_GET_ERROR, JEWELERY_GET_SUCCESS , JEWELERY_GET_ERROR, JEWELERY_ADD_ERROR, JEWELERY_ADD_SUCCESS} from '../../constant/redux-type';
+import { COLLECTION_GET_SUCCESS, COLLECTION_GET_ERROR, JEWELERY_GET_SUCCESS , JEWELERY_GET_ERROR, JEWELERY_ADD_ERROR, JEWELERY_ADD_SUCCESS,JEWELERY_EDIT_REQUEST,JEWELERY_EDIT_ERROR,JEWELERY_EDIT_SUCCESS} from '../../constant/redux-type';
 import {collectionGet} from '../../redux/actions/collection-action';
-import {jewelryGet, jeweleryAdd} from "../../redux/actions/jewelery-action"
+import {jewelryGet, jeweleryAdd,jeweleryEdit} from "../../redux/actions/jewelery-action"
 
 
 
@@ -15,12 +15,36 @@ const Jewelery = () => {
     const { Content } = Layout;
     const  dispatch = useDispatch();
     const dataState = useSelector((state) => state)
+    const [edit, setEdit] = useState(false)
+    const [editRecord, setEditRecord] = useState({})
     const [dataSource, setDataSource] = useState([
        
     ])
     const [collection, setCollection] = useState([])
     const handleSearch = (val) => {
         console.log("search", val)
+    }
+    const handleEdit = (data) => {
+        console.log("66", data)
+        setEditRecord(data)
+        setEdit(true)
+    }
+    const handleClose = (val) => {
+        console.log("vla", val)
+        setEdit(val)
+    }
+    const editHandler = (val,id) => {
+        console.log("val", val)
+        dispatch(jeweleryEdit(val,id)).then((result) => {
+
+            if (result.type === JEWELERY_EDIT_SUCCESS) {
+                console.log("result", result.response)
+                fetchCollection()
+                message.success(`record edit successfully!`, 3, onclose)
+            } else if (result.type === JEWELERY_EDIT_ERROR) {
+                message.error(`${result?.response?.data}`, 3, onclose)
+            }
+        })
     }
     const handleSubmit = (val) => {
         console.log("val 26", val)
@@ -74,12 +98,12 @@ const Jewelery = () => {
 
 
                         <Col xs={24} sm={12} md={16} className="gr-mb-2">
-                            <AddJewlry submitData={handleSubmit}
-                            data={collection}
-                            // collectionEdit={editHandler} 
-                            //  edit={edit} 
-                            //   editClose={handleClose} 
-                            ///   record={editRecord}
+                            <AddJewlry addJewelry={handleSubmit}
+                            collectionList={collection}
+                            editJewelry={editHandler} 
+                             edit={edit} 
+                              editClose={handleClose} 
+                             record={editRecord}
                             />
 
                         </Col>
@@ -91,7 +115,7 @@ const Jewelery = () => {
                         <Col span={24}>
                             <TableComponent dataSource={dataSource}
                              loading={dataState?.jeweleryGet?.loading}
-                            //  record={handleEdit}
+                             record={handleEdit}
                             />
                         </Col>
                     </Row>

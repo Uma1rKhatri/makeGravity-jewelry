@@ -3,16 +3,15 @@ import { Input, Form, Modal, Button, Row, Col, Checkbox, Select } from 'antd'
 
 
 
-const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
+const AddJewlry = ({ collectionList, addJewelry, edit, record, editClose, editJewelry }) => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [check, setCheck] = useState(false)
     const [progress, setProgress] = useState(null);
     const [progressFlagSuccess, setProgressFlagSuccess] = useState(false);
     const [collectionName, setCollectionName] = useState('')
-    const [fileObject, setFileObject] = useState({});
     const [form] = Form.useForm();
-    const {Option} = Select;
+    const { Option } = Select;
 
 
     const openModal = () => {
@@ -28,7 +27,6 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
         setIsModalVisible(false);
         form.resetFields();
         setProgress(0);
-        setFileObject({});
 
         editClose(false)
         form.setFieldsValue({
@@ -39,7 +37,8 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
         //     hidden: null,
         //     auction_details_text: null
         // })
-        // setCheck(false)
+        setCheck(false)
+        
 
     };
 
@@ -48,12 +47,12 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
         setIsModalVisible(false);
         form.resetFields();
 
-     //   editClose(false)
+        editClose(false)
         setProgress(0);
-        setFileObject({});
         form.setFieldsValue({
             weight_override: false
         })
+        
 
     };
 
@@ -64,15 +63,25 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
 
             data = values;
             data.weight_override = data.weight_override === true ? 1 : 0
+            if (!edit) {
+                setCheck(false)
+                addJewelry(data)
+               
+            }
+            else {
+                setCheck(false)
+                console.log("record",record)
+                editJewelry(data,record.id)
 
-            submitData(data)
-           
-           //     console.log("data", data)
+            }
 
-           setCheck(false)
+
+            //     console.log("data", data)
+            editClose(false)
+            setCheck(false)
             setIsModalVisible(false)
             form.resetFields();
-          
+
 
         });
 
@@ -80,7 +89,6 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
     const resetForm = () => {
         form.resetFields();
         setProgress(0);
-        setFileObject({});
     }
 
 
@@ -95,22 +103,28 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
         console.log("e, option", e, option.children)
         setCollectionName(option.children)
     }
-    // useEffect(() => {
-    //     setIsModalVisible(edit);
-    //     if (edit) {
-    //         console.log("recordrecord", record)
-    //         form.setFieldsValue({
-    //             collection_name: record.collection_name,
-    //             notes_text: record.notes_text,
-    //             hide: record.hide,
-    //             collection_description: record.collection_description
-    //         })
-    //         setCheck(record.hide)
-    //     }
+    useEffect(() => {
+        setIsModalVisible(edit);
+        if (edit) {
+            console.log("record", record)
+            form.setFieldsValue({
+                jewelry_nm: record.jewelry_nm,
+                valuation_units:record.valuation_units,
+                valuation_amount:record.valuation_amount,
+                jewelry_desc:record.jewelry_desc,
+                valuation_desc:record.valuation_desc,
+                weight_override:record.weight_override,
+                melee_calc_assoc_fields:record.melee_calc_assoc_fields,
+                collection_id:record.collection_id
 
+            })
+            setCheck(record.weight_override)
+            
+            
 
-
-    // }, [edit])
+        }
+    }
+    , [edit])
 
 
     return (
@@ -217,31 +231,31 @@ const AddJewlry = ({  data, submitData ,  edit, editClose,  }) => {
 
                                 labelCol={{ span: 24 }}
                                 wrapperCol={{ span: 23 }}
-                               // rules={[{ required: true, message: "Please input Jewelry name!" }]}
+                            // rules={[{ required: true, message: "Please input Jewelry name!" }]}
                             >
                                 <Input placeholder="Melee Name" />
                             </Form.Item>
                         </Col>
                         <Col className="ant-col-md-12 ant-col-sm-12 ant-col-xs-24">
-                        <Form.Item
-                            label="Collection Assigment"
-                            name="collection_id"
+                            <Form.Item
+                                label="Collection Assigment"
+                                name="collection_id"
 
-                            labelCol={{ span: 24 }}
-                            wrapperCol={{ span: 24 }}
-                            initialValue={null}
-                        >
-                            <Select onChange={(e, options) => handleCollection(e, options)}>
-                                {data && data.length && data.map((val, index) => {
-                                    return (
-                                        <Option value={val.id} key={val.id} >{val.collection_name}</Option>
-                                    )
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                                initialValue={null}
+                            >
+                                <Select onChange={(e, options) => handleCollection(e, options)}>
+                                    {collectionList && collectionList.length && collectionList.map((val, index) => {
+                                        return (
+                                            <Option value={val.id} key={val.id} >{val.collection_name}</Option>
+                                        )
 
-                                })}
+                                    })}
 
-                            </Select>
-                        </Form.Item>
-                    </Col>
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
                             <Form.Item
                                 //  label="Weight OverRide"
