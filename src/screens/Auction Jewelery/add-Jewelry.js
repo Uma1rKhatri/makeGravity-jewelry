@@ -72,6 +72,7 @@ const AddJewlry = ({ collectionList, addJewelry, edit, record, editClose, editJe
                 setCheck(false)
                 console.log("record",record)
                 editJewelry(data,record.id)
+                console.log("EDIT DATA",data)
 
             }
 

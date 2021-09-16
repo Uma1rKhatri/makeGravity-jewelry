@@ -39,7 +39,7 @@ const Jewelery = () => {
 
             if (result.type === JEWELERY_EDIT_SUCCESS) {
                 console.log("result", result.response)
-                fetchCollection()
+                fetchJewelery()
                 message.success(`record edit successfully!`, 3, onclose)
             } else if (result.type === JEWELERY_EDIT_ERROR) {
                 message.error(`${result?.response?.data}`, 3, onclose)
