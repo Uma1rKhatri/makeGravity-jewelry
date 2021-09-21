@@ -28,18 +28,7 @@ const AddJewlryATT = ({ collectionList, addJewelryATT, edit, record, editClose, 
     const { Option } = Select;
     const dispatch = useDispatch();
 
-    const onHandleChangeNumeric = e => {
-        let value = e.target.value;
-       
-        if (!Number(value)) {
-        setError("Only number Validate");
-        }
-       
-        setNum({ [e.target.name]: value });
-        setError('');
-  
-
-       };
+ 
        
     const openModal = () => {
         setCheck(false)

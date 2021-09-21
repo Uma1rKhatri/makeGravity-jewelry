@@ -108,6 +108,14 @@ const AppSidebar = ({ props, test }) => {
               <span>Jewelery Description</span>
             </Link>
           </Menu.Item>
+          <Menu.Item
+            key="jewelry-ddl-values"
+            icon={<GoldOutlined />}
+          >
+            <Link to={`/jewelery-ddl-values`} className="route-link">
+              <span>Jewelery DDL values</span>
+            </Link>
+          </Menu.Item>
 
         </Menu>
       </Sider>
