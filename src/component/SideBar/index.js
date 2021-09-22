@@ -10,7 +10,8 @@ import {
   MenuOutlined,
   MoneyCollectOutlined,
   SketchOutlined,
-  GoldOutlined 
+  GoldOutlined,
+  EditOutlined 
 } from "@ant-design/icons";
 import { Layout, Menu, Icon, Dropdown } from "antd";
 const { Sider } = Layout;
@@ -110,7 +111,7 @@ const AppSidebar = ({ props, test }) => {
           </Menu.Item>
           <Menu.Item
             key="jewelry-ddl-values"
-            icon={<GoldOutlined />}
+            icon={<EditOutlined /> }
           >
             <Link to={`/jewelery-ddl-values`} className="route-link">
               <span>Jewelery DDL values</span>

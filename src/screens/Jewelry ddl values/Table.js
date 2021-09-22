@@ -40,93 +40,47 @@ const TableComponent = ({ dataSource, loading, record }) => {
             }
         })
     }
-    function handleChange(value) {
-        console.log(`selected ${value}`);
-        fetchpicklist()
-    }
-    useEffect(() => {
-        fetchpicklist()
 
-    }, [])
+    console.log("VALUES IN TABLE",dataSource)
 
-    const addDDLValues = () => {
-        let { values } = form.getFieldsValue();
-        if (values && values.length > 0) {
-            const value = {
-                "list_member_txt": "",
-                "pick_list_position": values ? values.lastIndexOf() + 1 : 1
-            };
-            values.push(value);
-            form.setFieldsValue({ values })
-        }
+        const columns = [
+            {
+                title: 'Ddl Name',
+                dataIndex: 'ddl_nm',
+                key: 'ddl_nm',
+                width: 200
+             
+            },
 
-    }
+        ]
+    
 
 
 
     return (
-        <React.Fragment>
-            <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
-
-                <Form
-                    scrollToFirstError
-                    name="basic"
-                    form={form}
-                // onFinish={handleSubmit}
-                >
-                    <Row>
-
-                        <> <Form.Item
-                            label="Collection Attribute Type"
-                            name="data_type_desc"
-                            rules={[{ required: true, message: "Please input ATTRIBUTE TYPE!" }]}
-                            labelCol={{ span: 24 }}
-                            wrapperCol={{ span: 24 }}
-                            initialValue={null}
-                        >
-                            <Select style={{ width: "100%" }}
-                                label="Collection Attribute Type"
-                                name="ddl_id"
-                                rules={[{ required: true, message: "Please input Collection Attribute Type!" }]}
-                                labelCol={{ span: 24 }}
-                                wrapperCol={{ span: 24 }}
-                                initialValue={null}
-                                onChange={handleChange}>
-                                {Picklist && Picklist.length && Picklist.map((val, index) => {
-                                    return (
-                                        <Option value={val.id} key={val.id} >{val.ddl_nm}</Option>
-                                    )
-
-                                })}
-
-                            </Select>
-                        </Form.Item>
-                        </>
-
-
-                    </Row>
-                </Form>
-            </Col>
-            <div className="site-page-header-ghost-wrapper">
-<Form>
-                <Form.Item
-                >
-                    <Button style={{ marginRight: "720px" }} onClick={() => addDDLValues()} key="1" icon={<PlusOutlined />}>
-                    Add DDL Values
-                </Button>
-                </Form.Item>
-               
-
-                <Col className="ant-col-md-24 ant-col-sm-24 ant-col-xs-24">
-                    <Form.List name="auction_jewelry">
-                    </Form.List>
-                </Col>
-
-
-
-                </Form>
-            </div>
-        </React.Fragment>
+    <>
+    <div className="user-table">
+    <Table dataSource={dataSource} columns={columns}
+        rowKey="id"
+        loading={loading ? {
+            indicator: <Loader
+                type="Rings"
+                color="rgba(44, 62, 80,0.8)"
+                height={40}
+                width={40}
+            />
+        } : false}
+        scroll={{ x: "calc(100 + 50%)" }}
+        style={{ paddingLeft: 20, paddingRight: 20 }}
+        bordered={true}
+        align="left"
+        locale={{
+            emptyText: <Empty description={"EMPTY"} />,
+        }}
+    />
+</div>
+</>
+        
     )
 }
 

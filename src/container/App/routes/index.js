@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
+import Error404 from '../../../component/Page404/index'
 
 
 
@@ -20,6 +21,7 @@ const RouteApp = ({ match }) => {
       <Route exact path={`/auction-jewelery`} component={asyncComponent(() => import("../../../screens/Auction Jewelery"))} />
       <Route exact path={`/jewelery-description`} component={asyncComponent(() => import("../../../screens/Jewelry Attribute"))} />
       <Route exact path={`/jewelery-ddl-values`} component={asyncComponent(() => import("../../../screens/Jewelry ddl values"))} />
+      <Route component={Error404} />
     </Switch>
 
   )
