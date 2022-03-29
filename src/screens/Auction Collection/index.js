@@ -4,7 +4,10 @@ import SearchBox from '../../component/SearchBox';
 import TableComponent from "./Table";
 import { useDispatch, useSelector } from 'react-redux';
 import AuctionCollectionAddComponent from './AddCollection';
-import {COLLECTION_EDIT_SUCCESS, COLLECTION_EDIT_ERROR, COLLECTION_GET_SUCCESS, COLLECTION_GET_ERROR, COLLECTION_ADD_SUCCESS, COLLECTION_ADD_ERROR } from '../../constant/redux-type';
+import {COLLECTION_EDIT_SUCCESS, 
+    COLLECTION_EDIT_ERROR, 
+    COLLECTION_GET_SUCCESS, 
+    COLLECTION_GET_ERROR, COLLECTION_ADD_SUCCESS, COLLECTION_ADD_ERROR } from '../../constant/redux-type';
 import {collectionAdd, collectionEdit, collectionGet} from '../../redux/actions/collection-action';
 import {useLocation} from 'react-router-dom'
 import "./collection.css"

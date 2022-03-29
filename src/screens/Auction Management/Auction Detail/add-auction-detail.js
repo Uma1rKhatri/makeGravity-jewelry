@@ -677,7 +677,8 @@ const AddDetail = ({ }) => {
                             {(fields, { add, remove }, { errors }) => (
                                 <>
                                     {
-                                        fields.map((field) => (
+                                        fields.map((field) => 
+                                        (
                                             <div key={field.key} className="add-component">
                                                 <div style={{ float: 'right' }} >
                                                     <MinusCircleOutlined onClick={() => { remove(field.name); removeNewField(field.name); }} style={{ fontSize: '120%' }} />

@@ -62,7 +62,7 @@ const AddJewlry = ({ collectionList, addJewelry, edit, record, editClose, editJe
             let data = {};
 
             data = values;
-            data.weight_override = data.weight_override === true ? 1 : 0
+            data.hide = data.hide === true ? 1 : 0
             if (!edit) {
                 setCheck(false)
                 addJewelry(data)
