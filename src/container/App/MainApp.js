@@ -25,7 +25,7 @@ const MainApp = (props) => {
 
         <Layout>
           <HeaderComponent />
-          <div style={{ backgroundColor: "rgb(241, 240, 240)", height: "90vh", overflowY: "scroll" }}>
+          <div style={{ backgroundColor: "#fff", height: "90vh", overflowY: "scroll" }}>
             <div className="content" style={{ width: "100%", overflowY: 'scroll' }} >
               <App match={match} />
             </div>

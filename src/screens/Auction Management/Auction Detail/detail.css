@@ -1,0 +1,84 @@
+.datepicker {
+    width: 100%;
+}
+
+.ant-picker {
+    display: block !important;
+}
+
+.ant-form-item-label {
+    font-family: cursive
+}
+
+ /* .carousel.carousel-slider  {
+  
+    object-fit: cover !important;
+    height: 400px !important;
+    width: 100% !important;
+}  */
+
+
+.img-stl {
+    object-fit: contain !important;
+
+    /* vertical-align: middle;
+    max-width: 100%;
+    height: auto; */
+  }
+
+
+  .slider-item-div {
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+.carousel-style {
+    height: 100% !important;
+}
+
+.img-stl{
+   
+    max-width: 100%;
+  max-height: 100%;
+object-fit: contain;
+}
+.ant-input-number {
+width: -webkit-fill-available;
+}
+
+.ant-input-number-handler-wrap{
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .gr-mb-2 {
+        margin-bottom: 10px !important
+    }
+}
+
+.add-component {
+    border: 2px ridge #4919b9;
+    background-color: rgb(251, 251, 253);
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* ant-select ant-select-single  */
+.ant-select-show-arrow{
+    width: -webkit-fill-available;
+}
+
+.ant-input[disabled]{
+    background-color: #fff;
+}
+
+.ant-picker-input > input[disabled]{
+    background-color: #fff;
+}
+
+.ant-picker.ant-picker-disabled{
+    background-color: #fff;
+}

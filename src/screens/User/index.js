@@ -59,7 +59,7 @@ const User = () => {
         <React.Fragment>
             {match === "admin" ?
                 <Layout
-                    style={{ height: "100vh", overflowY: "hidden", background: "white" }}
+                    style={{  overflowY: "hidden", background: "white" }}
                 >
 
                     <Content style={{ margin: "20px" }}>
